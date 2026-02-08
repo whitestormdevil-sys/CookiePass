@@ -1,128 +1,161 @@
-"use client";
+'use client'
 
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from 'react'
 
-interface CounterProps {
-  end: number;
-  suffix?: string;
-  prefix?: string;
-  isVisible: boolean;
+interface Stat {
+  id: string
+  value: number | string
+  suffix: string
+  label: string
+  color: string
+  shouldCount: boolean
 }
 
-function AnimatedCounter({ end, suffix = "", prefix = "", isVisible }: CounterProps) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!isVisible) return;
-    
-    let startTime: number;
-    const duration = 2000; // 2 seconds
-    const startValue = 0;
-    const endValue = end;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      
-      const current = Math.floor(startValue + (endValue - startValue) * easeOutQuart);
-      setCount(current);
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    
-    requestAnimationFrame(animate);
-  }, [end, isVisible]);
-
-  return (
-    <span className="animate-count-up">
-      {prefix}{count.toLocaleString()}{suffix}
-    </span>
-  );
-}
+const stats: Stat[] = [
+  {
+    id: 'sessions',
+    value: 10000,
+    suffix: '+',
+    label: 'sessions shared',
+    color: 'text-indigo-600',
+    shouldCount: true,
+  },
+  {
+    id: 'encryption',
+    value: '256-bit',
+    suffix: '',
+    label: 'encryption',
+    color: 'text-emerald-600',
+    shouldCount: false,
+  },
+  {
+    id: 'uptime',
+    value: '99.9%',
+    suffix: '',
+    label: 'uptime',
+    color: 'text-blue-600',
+    shouldCount: false,
+  },
+  {
+    id: 'websites',
+    value: 50,
+    suffix: '+',
+    label: 'supported websites tested',
+    color: 'text-purple-600',
+    shouldCount: true,
+  },
+]
 
 export function Stats() {
-  const { ref, isVisible } = useScrollAnimation();
+  const [isVisible, setIsVisible] = useState(false)
+  const [counts, setCounts] = useState<Record<string, number>>({
+    sessions: 0,
+    websites: 0,
+  })
+  const sectionRef = useRef<HTMLElement>(null)
+  const hasAnimated = useRef(false)
+  const rafIds = useRef<number[]>([])
 
-  const stats = [
-    {
-      number: 10000,
-      suffix: "+",
-      label: "Sessions shared",
-      description: "Users trust us with their access",
-      color: "from-indigo-600 to-purple-600",
-    },
-    {
-      number: 256,
-      suffix: "-bit",
-      label: "Encryption",
-      description: "Military-grade security standard",
-      color: "from-purple-600 to-pink-600",
-    },
-    {
-      number: 0,
-      label: "Data breaches",
-      description: "Perfect security track record",
-      color: "from-emerald-600 to-teal-600",
-    },
-    {
-      number: 100,
-      suffix: "%",
-      label: "Open source",
-      description: "Transparent and auditable code",
-      color: "from-blue-600 to-indigo-600",
-    },
-  ];
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -50px 0px' }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!isVisible || hasAnimated.current) return
+    hasAnimated.current = true
+
+    const duration = 2000
+
+    stats.forEach((stat) => {
+      if (stat.shouldCount && typeof stat.value === 'number') {
+        const startTime = performance.now()
+        
+        const animate = (currentTime: number) => {
+          const elapsed = currentTime - startTime
+          const progress = Math.min(elapsed / duration, 1)
+          const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+          const current = Math.floor((stat.value as number) * easeOutQuart)
+          
+          setCounts((prev) => ({
+            ...prev,
+            [stat.id]: current,
+          }))
+          
+          if (progress < 1) {
+            const rafId = requestAnimationFrame(animate)
+            rafIds.current.push(rafId)
+          }
+        }
+        
+        const rafId = requestAnimationFrame(animate)
+        rafIds.current.push(rafId)
+      }
+    })
+
+    return () => {
+      rafIds.current.forEach(id => cancelAnimationFrame(id))
+      rafIds.current = []
+    }
+  }, [isVisible])
+
+  const formatValue = (stat: Stat) => {
+    if (!stat.shouldCount) return stat.value
+    const num = counts[stat.id]
+    return num.toLocaleString()
+  }
 
   return (
-    <section className="py-24 sm:py-32 bg-slate-50 gradient-mesh-1 relative">
-      {/* Decorative orbs */}
-      <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-indigo-200/30 to-purple-300/20 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-purple-200/20 to-indigo-200/30 blob blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
-
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <p className="text-section-label text-slate-600 mb-4">Trusted Worldwide</p>
-          <h2 className="text-section-heading font-semibold text-gray-900 mb-6">
-            Powering secure sharing globally
+    <section 
+      ref={sectionRef} 
+      className="py-28 bg-gradient-to-b from-gray-50 to-white"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <p className="text-sm font-semibold text-indigo-600 uppercase tracking-wide mb-3">
+            BY THE NUMBERS
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Trusted by thousands worldwide
           </h2>
         </div>
 
-        <div 
-          ref={ref}
-          className={`animate-on-scroll ${isVisible ? 'visible' : ''}`}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div 
-                key={stat.label} 
-                className={`text-center glass backdrop-blur-xl rounded-2xl p-8 hover-lift-indigo animate-fade-in-up stagger-${index + 1}`}
-              >
-                <div className="text-5xl lg:text-6xl font-bold text-gray-900 mb-2">
-                  <AnimatedCounter
-                    end={stat.number}
-                    suffix={stat.suffix}
-                    isVisible={isVisible}
-                  />
-                </div>
-                <div className="text-lg font-semibold text-gray-700 mb-2 relative">
-                  {stat.label}
-                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 h-0.5 w-8 bg-gradient-to-r ${stat.color} rounded-full`} />
-                </div>
-                <div className="text-sm text-gray-600">
-                  {stat.description}
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {stats.map((stat, index) => (
+            <div
+              key={stat.id}
+              className={`
+                bg-white rounded-2xl p-8 border border-gray-100 shadow-sm
+                transition-all duration-700 ease-out
+                ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
+              `}
+              style={{
+                transitionDelay: `${index * 100}ms`,
+              }}
+            >
+              <div className={`text-5xl font-bold ${stat.color} mb-2`}>
+                {formatValue(stat)}
+                {stat.suffix}
               </div>
-            ))}
-          </div>
+              <div className="text-gray-600 text-lg">
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

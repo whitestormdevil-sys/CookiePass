@@ -1,167 +1,230 @@
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+'use client'
+
+import React, { useEffect, useRef, useState } from 'react'
+
+const LockIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <rect x="5" y="11" width="14" height="10" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+)
+
+const EyeOffIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+    <line x1="1" y1="1" x2="23" y2="23" />
+  </svg>
+)
+
+const ShieldIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+)
+
+const ClockIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+)
+
+const ServerIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+    <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+    <line x1="6" y1="6" x2="6.01" y2="6" />
+    <line x1="6" y1="18" x2="6.01" y2="18" />
+  </svg>
+)
 
 export function Security() {
-  const { ref, isVisible } = useScrollAnimation();
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
 
-  const securityPoints = [
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1, rootMargin: '-50px' }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  const features = [
     {
+      icon: LockIcon,
+      title: "AES-256 Encryption",
+      description: "Military-grade encryption protects every credential with the same standard used by governments worldwide.",
+      color: "text-indigo-400"
+    },
+    {
+      icon: EyeOffIcon,
       title: "Zero-Knowledge Architecture",
-      description: "We never see your passwords or session data in plaintext. Everything is encrypted on your device before transmission.",
+      description: "Your master password never leaves your device. We cannot access, reset, or recover your data—ever.",
+      color: "text-emerald-400"
     },
     {
+      icon: ShieldIcon,
       title: "Client-Side Encryption",
-      description: "All encryption and decryption happens in your browser using industry-standard AES-256 encryption.",
+      description: "All encryption happens locally in your browser before any data touches our servers.",
+      color: "text-blue-400"
     },
     {
-      title: "Open Source & Auditable",
-      description: "Our entire codebase is open source and available for security audits by the community.",
-    },
-    {
-      title: "No Plaintext Storage",
-      description: "We only store encrypted data. Even if our servers were compromised, your data would remain secure.",
-    },
-  ];
+      icon: ClockIcon,
+      title: "Auto-Expiring Sessions",
+      description: "Sessions automatically lock after periods of inactivity, ensuring your vault stays secure.",
+      color: "text-amber-400"
+    }
+  ]
+
+  const FadeIn = ({ children, delay = 0, className = '' }: { children: React.ReactNode, delay?: number, className?: string }) => (
+    <div 
+      className={`transform transition-all duration-700 ease-out ${className} ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  )
 
   return (
-    <section id="security" className="py-24 sm:py-32 bg-gradient-to-br from-slate-50 to-gray-100 bg-grid relative">
-      {/* Background grid pattern overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/90 to-transparent" />
+    <section ref={sectionRef} className="py-28 sm:py-32 bg-gray-950 text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-900/20 via-gray-950 to-gray-950 pointer-events-none" />
       
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-        <div className="mx-auto max-w-2xl text-center mb-20">
-          <p className="text-section-label text-green-600 mb-4">Security</p>
-          <h2 className="text-section-heading font-semibold text-gray-900 mb-6">
-            Security at every step
-          </h2>
-          <p className="text-lg text-gray-600">
-            Your data is protected by military-grade encryption throughout the entire process.
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-12">
+            <FadeIn>
+              <span className="text-indigo-400 font-semibold tracking-wider uppercase text-sm">
+                Security
+              </span>
+              <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
+                Security that never compromises
+              </h2>
+              <p className="mt-4 text-gray-400 text-lg max-w-xl">
+                Your data deserves fortress-level protection. We built CookiePass with security-first architecture that puts you in complete control.
+              </p>
+            </FadeIn>
 
-        {/* Security flow diagram with enhanced animations */}
-        <div 
-          ref={ref}
-          className={`animate-on-scroll ${isVisible ? 'visible' : ''} mb-20`}
-        >
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-4 glass backdrop-blur-xl rounded-3xl p-8 lg:p-12 border border-green-200/50 relative overflow-hidden">
-            {/* Animated background pattern */}
-            <div className="absolute inset-0 bg-gradient-to-r from-green-50/50 to-emerald-50/50" />
-            
-            {/* Step 1: Your Browser */}
-            <div className="flex flex-col items-center text-center z-10 animate-fade-in-up stagger-1">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 shadow-lg animate-pulse-slow">
-                <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Your Browser</h3>
-              <p className="text-sm text-gray-600 max-w-xs">Session data collected securely</p>
+            <div className="space-y-0">
+              {features.map((feature, index) => (
+                <FadeIn key={feature.title} delay={100 + (index * 100)}>
+                  <div className={`flex gap-4 py-6 ${index !== features.length - 1 ? 'border-b border-white/10' : ''}`}>
+                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <feature.icon className={`w-5 h-5 ${feature.color}`} />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-semibold text-white">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
             </div>
+          </div>
 
-            {/* Animated Arrow 1 */}
-            <div className="flex items-center z-10">
-              <div className="relative">
-                <svg className="h-6 w-8 text-green-500 transform lg:rotate-0 rotate-90 animate-pulse-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <div className="absolute inset-0 bg-green-300 rounded-full blur-sm animate-ping opacity-20" />
-              </div>
-            </div>
+          <div className="relative lg:pl-8">
+            <div className="relative flex flex-col items-center space-y-2 max-w-sm mx-auto lg:max-w-none">
+              <FadeIn delay={200} className="w-full">
+                <div className="bg-white/10 rounded-2xl p-4 border border-white/10 backdrop-blur-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                      <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    </div>
+                    <div className="flex-1 h-6 bg-white/5 rounded-md flex items-center px-3">
+                      <span className="text-xs text-gray-500 font-mono">cookiepass.com</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2 p-2">
+                    <div className="h-2 bg-white/10 rounded w-3/4" />
+                    <div className="h-2 bg-white/10 rounded w-1/2" />
+                  </div>
+                  <div className="mt-3 p-3 bg-white/5 rounded-lg border border-white/5 flex items-center gap-2">
+                    <LockIcon className="w-4 h-4 text-indigo-400" />
+                    <span className="text-xs text-gray-400">Encrypting locally...</span>
+                  </div>
+                </div>
+              </FadeIn>
 
-            {/* Step 2: AES-256 Encrypt */}
-            <div className="flex flex-col items-center text-center z-10 animate-fade-in-up stagger-2">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg animate-pulse-slow" style={{ animationDelay: '0.5s' }}>
-                <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">AES-256 Encrypt</h3>
-              <p className="text-sm text-gray-600 max-w-xs">Military-grade encryption applied</p>
-            </div>
+              <FadeIn delay={300} className="h-12 w-full flex justify-center relative">
+                <div className="absolute inset-0 flex flex-col items-center">
+                  <div className="w-px h-full bg-gradient-to-b from-white/20 to-indigo-500/50" />
+                </div>
+                <div className="relative flex items-center justify-center h-full">
+                  <div className="absolute w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_10px_rgba(129,140,248,0.8)]" />
+                </div>
+              </FadeIn>
 
-            {/* Animated Arrow 2 */}
-            <div className="flex items-center z-10">
-              <div className="relative">
-                <svg className="h-6 w-8 text-green-500 transform lg:rotate-0 rotate-90 animate-pulse-slow" style={{ animationDelay: '0.3s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <div className="absolute inset-0 bg-green-300 rounded-full blur-sm animate-ping opacity-20" style={{ animationDelay: '0.3s' }} />
-              </div>
-            </div>
+              <FadeIn delay={400} className="w-full">
+                <div className="bg-indigo-500/20 rounded-2xl p-5 border border-indigo-500/30 backdrop-blur-sm shadow-[0_0_60px_-15px_rgba(102,99,242,0.3)] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/10 to-transparent opacity-50" />
+                  <div className="relative flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                      <LockIcon className="w-6 h-6 text-indigo-300" />
+                    </div>
+                    <div>
+                      <div className="text-base font-semibold text-indigo-100">AES-256 Encrypted</div>
+                      <div className="text-xs text-indigo-300/70">End-to-end protection</div>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex gap-1">
+                    {[...Array(6)].map((_, i) => (
+                      <div key={i} className="h-1.5 flex-1 bg-indigo-500/20 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-indigo-400/60 rounded-full"
+                          style={{ 
+                            width: '40%',
+                            animation: `shimmer 2s infinite`,
+                            animationDelay: `${i * 0.15}s`
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
 
-            {/* Step 3: Encrypted Storage */}
-            <div className="flex flex-col items-center text-center z-10 animate-fade-in-up stagger-3">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center mb-4 shadow-lg animate-pulse-slow" style={{ animationDelay: '1s' }}>
-                <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Encrypted Storage</h3>
-              <p className="text-sm text-gray-600 max-w-xs">Safely stored on our servers</p>
-            </div>
+              <FadeIn delay={500} className="h-12 w-full flex justify-center relative">
+                <div className="absolute inset-0 flex flex-col items-center">
+                  <div className="w-px h-full bg-gradient-to-b from-indigo-500/50 to-white/20" />
+                </div>
+                <div className="relative flex items-center justify-center h-full">
+                  <div className="absolute w-2 h-2 rounded-full bg-indigo-400 animate-pulse shadow-[0_0_10px_rgba(129,140,248,0.8)]" />
+                </div>
+              </FadeIn>
 
-            {/* Animated Arrow 3 */}
-            <div className="flex items-center z-10">
-              <div className="relative">
-                <svg className="h-6 w-8 text-green-500 transform lg:rotate-0 rotate-90 animate-pulse-slow" style={{ animationDelay: '0.6s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <div className="absolute inset-0 bg-green-300 rounded-full blur-sm animate-ping opacity-20" style={{ animationDelay: '0.6s' }} />
-              </div>
-            </div>
-
-            {/* Step 4: Recipient Decrypts */}
-            <div className="flex flex-col items-center text-center z-10 animate-fade-in-up stagger-4">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center mb-4 shadow-lg animate-pulse-slow" style={{ animationDelay: '1.5s' }}>
-                <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 12H9v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.586l4.707-4.707A6 6 0 0115 7z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Recipient Decrypts</h3>
-              <p className="text-sm text-gray-600 max-w-xs">Unlocked with share password</p>
-            </div>
-
-            {/* Animated Arrow 4 */}
-            <div className="flex items-center z-10">
-              <div className="relative">
-                <svg className="h-6 w-8 text-green-500 transform lg:rotate-0 rotate-90 animate-pulse-slow" style={{ animationDelay: '0.9s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-                <div className="absolute inset-0 bg-green-300 rounded-full blur-sm animate-ping opacity-20" style={{ animationDelay: '0.9s' }} />
-              </div>
-            </div>
-
-            {/* Step 5: Their Browser */}
-            <div className="flex flex-col items-center text-center z-10 animate-fade-in-up stagger-5">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-4 shadow-lg animate-pulse-slow" style={{ animationDelay: '2s' }}>
-                <svg className="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Their Browser</h3>
-              <p className="text-sm text-gray-600 max-w-xs">Session imported and ready</p>
+              <FadeIn delay={600} className="w-full">
+                <div className="bg-white/10 rounded-2xl p-4 border border-white/10 backdrop-blur-sm">
+                  <div className="flex items-center gap-3">
+                    <ServerIcon className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <div className="text-sm font-medium text-white">CookiePass Server</div>
+                      <div className="text-xs text-gray-500">Encrypted blob only</div>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-center">
+                    <span className="text-xs text-gray-500 italic">We never see your data in plaintext</span>
+                  </div>
+                </div>
+              </FadeIn>
             </div>
           </div>
         </div>
-
-        {/* Security points grid with staggered animation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {securityPoints.map((point, index) => (
-            <div 
-              key={point.title} 
-              className={`glass backdrop-blur-xl rounded-2xl p-8 border border-gray-200/50 hover-lift-indigo animate-fade-in-up stagger-${index + 1}`}
-            >
-              <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-3">
-                <div className="h-2 w-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full animate-pulse" />
-                {point.title}
-              </h3>
-              <p className="text-gray-600 leading-7">
-                {point.description}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
-  );
+  )
 }

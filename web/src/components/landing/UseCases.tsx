@@ -1,117 +1,115 @@
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
 
 export function UseCases() {
-  const { ref, isVisible } = useScrollAnimation();
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
 
   const useCases = [
     {
-      title: "Share streaming services",
-      description: "Give family and friends access to Netflix, Disney+, Hulu, and other streaming platforms without sharing your actual passwords.",
-      gradient: "from-red-50/80 to-orange-50/80",
-      border: "border-red-200/50",
-      iconBg: "bg-gradient-to-br from-red-500 to-orange-600",
-      shadow: "shadow-red",
+      title: 'Share Netflix, Disney+, Hulu access',
+      description: 'Let family members use streaming accounts without sharing passwords. Secure, temporary access that expires automatically when no longer needed.',
+      gradient: 'from-red-50 to-orange-50',
+      border: 'border-red-100',
+      iconBg: 'bg-red-500',
       icon: (
-        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4l-2 9a1 1 0 001 1h12a1 1 0 001-1L17 4M9 9h6M9 13h6" />
+        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <rect x="2" y="5" width="20" height="14" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10 10l4 2-4 2v-4z" fill="currentColor"/>
         </svg>
-      ),
-      benefits: ["Family plan sharing", "No password exposure", "Revoke anytime"],
+      )
     },
     {
-      title: "Temporary team access",
-      description: "Provide contractors, freelancers, or temporary staff access to internal tools and platforms with automatic expiration.",
-      gradient: "from-blue-50/80 to-indigo-50/80",
-      border: "border-blue-200/50",
-      iconBg: "bg-gradient-to-br from-blue-500 to-indigo-600",
-      shadow: "shadow-indigo",
+      title: 'Give team members tool access',
+      description: 'Share access to development tools, SaaS platforms, and dashboards without exposing credentials. Perfect for agencies and remote teams.',
+      gradient: 'from-blue-50 to-indigo-50',
+      border: 'border-blue-100',
+      iconBg: 'bg-blue-500',
       icon: (
-        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
-      ),
-      benefits: ["Time-limited access", "No account creation", "Complete audit trail"],
+      )
     },
     {
-      title: "Client demonstrations",
-      description: "Show your products and services to clients by sharing access to admin panels, dashboards, or demo environments.",
-      gradient: "from-emerald-50/80 to-teal-50/80",
-      border: "border-emerald-200/50",
-      iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
-      shadow: "shadow-emerald",
+      title: 'Share client account access securely',
+      description: 'Freelancers and agencies can provide managed access to client accounts without revealing login details. Maintain security while delivering work.',
+      gradient: 'from-emerald-50 to-teal-50',
+      border: 'border-emerald-100',
+      iconBg: 'bg-emerald-500',
       icon: (
-        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
-      ),
-      benefits: ["Secure demos", "Usage tracking", "Professional impression"],
+      )
     },
     {
-      title: "Virtual assistant access",
-      description: "Grant your VA or support team temporary access to manage your accounts without compromising your login credentials.",
-      gradient: "from-purple-50/80 to-violet-50/80",
-      border: "border-purple-200/50",
-      iconBg: "bg-gradient-to-br from-purple-500 to-violet-600",
-      shadow: "shadow-purple",
+      title: 'Delegate without exposing credentials',
+      description: 'Give virtual assistants access to specific accounts without sharing passwords. Revoke access instantly when tasks are complete.',
+      gradient: 'from-purple-50 to-violet-50',
+      border: 'border-purple-100',
+      iconBg: 'bg-purple-500',
       icon: (
-        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
-      ),
-      benefits: ["Delegate safely", "Monitor activity", "Instant revocation"],
-    },
-  ];
+      )
+    }
+  ]
 
   return (
-    <section className="py-24 sm:py-32 bg-gray-50">
+    <section ref={sectionRef} className="py-28 sm:py-32 bg-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center mb-16">
-          <p className="text-section-label text-indigo-600 mb-4">Use Cases</p>
-          <h2 className="text-section-heading font-semibold text-gray-900 mb-6">
-            Built for real-world sharing
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-base font-semibold leading-7 text-indigo-600 uppercase tracking-wide">Use Cases</p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Built for every sharing scenario
           </h2>
-          <p className="text-lg text-gray-600">
-            From personal use to enterprise scenarios, CookiePass adapts to your needs.
+          <p className="mt-6 text-lg leading-8 text-gray-600">
+            Securely share access to any account without compromising your credentials. Perfect for teams, families, and professionals.
           </p>
         </div>
-
-        <div 
-          ref={ref}
-          className={`animate-on-scroll ${isVisible ? 'visible' : ''}`}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {useCases.map((useCase, index) => (
-              <div 
-                key={useCase.title}
-                className={`bg-gradient-to-br ${useCase.gradient} backdrop-blur-sm rounded-3xl p-8 border ${useCase.border} transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:${useCase.shadow} animate-fade-in-up stagger-${(index % 4) + 1}`}
-              >
-                <div className={`flex items-center justify-center h-16 w-16 rounded-2xl ${useCase.iconBg} text-white mb-6`}>
-                  {useCase.icon}
-                </div>
-                
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  {useCase.title}
-                </h3>
-                
-                <p className="text-gray-600 mb-6 leading-7">
-                  {useCase.description}
-                </p>
-                
-                <ul className="space-y-2">
-                  {useCase.benefits.map((benefit) => (
-                    <li key={benefit} className="flex items-center gap-3 text-sm text-gray-600">
-                      <svg className="h-4 w-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
+        
+        <div className="mx-auto mt-16 grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-2">
+          {useCases.map((useCase, index) => (
+            <div
+              key={useCase.title}
+              className={`group relative rounded-3xl border p-8 bg-gradient-to-br ${useCase.gradient} ${useCase.border} transition-all duration-500 hover:-translate-y-1.5 hover:shadow-lg ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${useCase.iconBg} shadow-sm`}>
+                {useCase.icon}
               </div>
-            ))}
-          </div>
+              <h3 className="mt-6 text-xl font-semibold text-gray-900">
+                {useCase.title}
+              </h3>
+              <p className="mt-3 text-gray-600 leading-relaxed">
+                {useCase.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  );
+  )
 }
