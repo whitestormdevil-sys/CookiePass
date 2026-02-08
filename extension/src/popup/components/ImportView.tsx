@@ -92,6 +92,8 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
         );
         return;
       }
+      // Wait for permission to propagate to the service worker
+      await new Promise(r => setTimeout(r, 500));
     }
 
     setStep('importing');
