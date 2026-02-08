@@ -36,8 +36,9 @@ export function RegisterForm() {
         throw new Error(res.error || "Registration failed");
       }
       
-      if (res.data?.token) {
-        setTokens(res.data.token);
+      const token = res.data?.token;
+      if (token) {
+        setTokens(token);
         window.location.href = "/dashboard";
       } else {
         throw new Error("No token received");

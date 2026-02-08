@@ -63,16 +63,32 @@ async function request<T>(
 
   try {
     const res = await fetch(url, { ...options, headers });
-    const data = await res.json();
+    const body = await res.json();
 
     if (!res.ok) {
       return {
         success: false,
-        error: data.error || data.message || `HTTP ${res.status}`,
+        error: body.error || body.message || `HTTP ${res.status}`,
       };
     }
 
-    return { success: true, data };
+    // API responses come as { success, data, ...extras }
+    // Unwrap body.data as the primary payload, but also spread
+    // any sibling fields (total, limit, offset) for list endpoints
+    const { success: _s, data: innerData, ...extras } = body;
+    const payload = innerData !== undefined ? innerData : body;
+    
+    // For list endpoints that have sibling fields like total/limit/offset,
+    // merge them into the response data
+    if (Object.keys(extras).length > 0 && typeof payload === 'object' && !Array.isArray(payload)) {
+      return { success: true, data: { ...payload, ...extras } };
+    }
+    // For array data with extras (like GET /shares), wrap in object
+    if (Object.keys(extras).length > 0 && Array.isArray(payload)) {
+      return { success: true, data: { items: payload, ...extras } };
+    }
+    
+    return { success: true, data: payload };
   } catch (err) {
     return {
       success: false,
@@ -116,20 +132,21 @@ export const api = {
       const qs = query.toString();
       
       const response = await request<{
-        data: ApiShareResponse[];
+        items: ApiShareResponse[];
         total: number;
         limit: number;
         offset: number;
       }>(`/shares${qs ? `?${qs}` : ""}`);
       
       if (response.success && response.data) {
+        const items = response.data.items || [];
         return {
           success: true,
           data: {
-            shares: response.data.data.map(mapShareFromApi),
-            total: response.data.total,
-            limit: response.data.limit,
-            offset: response.data.offset,
+            shares: items.map(mapShareFromApi),
+            total: response.data.total || 0,
+            limit: response.data.limit || 20,
+            offset: response.data.offset || 0,
           },
         };
       }
@@ -181,16 +198,17 @@ export const api = {
     
     async getImports(id: string) {
       const response = await request<{
-        data: ApiImportResponse[];
+        items: ApiImportResponse[];
         total: number;
       }>(`/shares/${id}/imports`);
       
       if (response.success && response.data) {
+        const items = response.data.items || [];
         return {
           success: true,
           data: {
-            imports: response.data.data.map(mapImportFromApi),
-            total: response.data.total,
+            imports: items.map(mapImportFromApi),
+            total: response.data.total || 0,
           },
         };
       }
