@@ -91,6 +91,36 @@ export interface DashboardStats {
   importsByDay: { date: string; count: number }[];
 }
 
+// ─── Guides ─────────────────────────────────────────────────
+export interface Guide {
+  slug: string;
+  title: string;
+  description: string;
+  difficulty: 'easy' | 'intermediate' | 'advanced';
+  service: string;
+  content?: string;
+  steps?: GuideStep[];
+  updated_at: string;
+}
+
+export interface GuideStep {
+  title: string;
+  description: string;
+  image_url?: string;
+}
+
+// ─── Blog ─────────────────────────────────────────────────
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  publishedAt: string;
+  readTime: number;
+  tags: string[];
+}
+
 // ─── Pricing ─────────────────────────────────────────────────
 export interface PricingTier {
   name: string;

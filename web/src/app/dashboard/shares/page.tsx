@@ -145,7 +145,7 @@ export default function SharesPage() {
           </p>
           <div className="flex items-center gap-2">
             <Button 
-              variant="outline" 
+              variant="primary" 
               size="sm" 
               disabled={currentPage <= 1}
               onClick={handlePreviousPage}
@@ -156,7 +156,7 @@ export default function SharesPage() {
               Page {currentPage} of {totalPages}
             </span>
             <Button 
-              variant="outline" 
+              variant="primary" 
               size="sm" 
               disabled={currentPage >= totalPages}
               onClick={handleNextPage}
@@ -180,7 +180,7 @@ export default function SharesPage() {
               {statusFilter === "all" ? "You haven't created any shares yet." : `No ${statusFilter} shares found.`}
             </p>
             {statusFilter !== "all" && (
-              <Button variant="outline" onClick={() => setStatusFilter("all")}>
+              <Button onClick={() => setStatusFilter("all")}>
                 View all shares
               </Button>
             )}

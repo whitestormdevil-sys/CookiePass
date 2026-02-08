@@ -94,7 +94,7 @@ export default function PricingPage() {
             </span>
           </Link>
           <Link href="/auth/login">
-            <Button variant="outline" size="sm">
+            <Button size="sm">
               Sign In
             </Button>
           </Link>

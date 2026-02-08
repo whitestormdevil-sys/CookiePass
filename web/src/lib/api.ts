@@ -6,6 +6,7 @@ import type {
   Share,
   ImportRecord,
   User,
+  Guide,
 } from "@/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -223,6 +224,17 @@ export const api = {
       return request<{ id: string; imported_at: string; success: boolean }>(`/shares/${id}/import`, {
         method: "POST",
       });
+    },
+  },
+
+  // ─── Guides ──────────────────────────────────────────────────
+  guides: {
+    async list() {
+      return request<Guide[]>("/guides");
+    },
+    
+    async get(slug: string) {
+      return request<Guide>(`/guides/${slug}`);
     },
   },
 

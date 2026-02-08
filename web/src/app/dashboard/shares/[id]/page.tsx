@@ -11,7 +11,7 @@ export default function ShareDetailsPage({ params }: { params: { id: string } })
     <div className="space-y-8 max-w-4xl">
       <div className="flex items-center gap-4">
         <Link href="/dashboard/shares">
-          <Button variant="outline" size="sm">
+          <Button size="sm">
             <svg className="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
