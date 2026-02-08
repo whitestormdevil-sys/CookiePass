@@ -96,8 +96,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <header className="sticky top-0 z-40 border-b border-gray-200/50 bg-white/80 backdrop-blur-lg">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+        <nav className="section-container flex items-center justify-between py-4">
           <Link href="/" className="flex items-center gap-2.5">
             <Image src="/logo.svg" alt="CookiePass" width={32} height={32} />
             <span className="text-xl font-bold text-gray-900">

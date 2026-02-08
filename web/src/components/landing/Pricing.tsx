@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Button } from "@/components/ui/Button";
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
-  const { ref, isVisible } = useScrollAnimation();
+  const containerRef = useScrollReveal();
 
   const plans = [
     {
@@ -40,6 +40,7 @@ export function Pricing() {
         "Custom share URLs",
         "Usage notifications",
         "Export audit logs",
+        "Priority processing",
       ],
       cta: "Start Pro Trial",
       href: "/auth/register?plan=pro",
@@ -74,22 +75,22 @@ export function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-24 sm:py-32 bg-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl text-center mb-16">
-          <p className="text-section-label text-indigo-600 mb-4">Pricing</p>
-          <h2 className="text-section-heading font-semibold text-gray-900 mb-6">
+    <section id="pricing" className="py-24 sm:py-32 bg-white relative">
+      <div className="section-container">
+        <div className="mx-auto max-w-4xl text-center mb-20">
+          <div className="section-label">Pricing</div>
+          <h2 className="section-heading">
             Simple, transparent pricing
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-xl text-gray-600 leading-relaxed mb-8">
             Start free and upgrade as you grow. No hidden fees, cancel anytime.
           </p>
 
           {/* Enhanced billing toggle */}
-          <div className="flex items-center justify-center gap-4 p-1 bg-gray-100 rounded-full max-w-xs mx-auto">
+          <div className="inline-flex items-center p-1 bg-gray-100 rounded-full">
             <button
               onClick={() => setIsYearly(false)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 !isYearly 
                   ? 'bg-white text-gray-900 shadow-sm' 
                   : 'text-gray-600 hover:text-gray-900'
@@ -99,129 +100,126 @@ export function Pricing() {
             </button>
             <button
               onClick={() => setIsYearly(true)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative ${
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 relative ${
                 isYearly 
                   ? 'bg-white text-gray-900 shadow-sm' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               Yearly
-              {isYearly && (
-                <span className="absolute -top-2 -right-2 inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                  Save 20%
-                </span>
-              )}
+              <span className="absolute -top-2 -right-2 inline-flex items-center rounded-full bg-green-500 px-2 py-0.5 text-xs font-medium text-white">
+                20% off
+              </span>
             </button>
           </div>
         </div>
 
-        <div 
-          ref={ref}
-          className={`animate-on-scroll ${isVisible ? 'visible' : ''}`}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div ref={containerRef} className="relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {plans.map((plan, index) => (
               <div
                 key={plan.name}
-                className={`relative bg-white rounded-3xl border-2 p-8 transition-all duration-300 animate-fade-in-up stagger-${index + 1} ${
+                className={`reveal delay-${index + 1} relative ${
                   plan.popular
-                    ? 'border-indigo-200 shadow-indigo scale-110 z-10 shadow-2xl glass backdrop-blur-sm'
-                    : 'border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-2'
+                    ? 'transform scale-105 z-10'
+                    : 'z-0'
                 }`}
               >
                 {plan.popular && (
-                  <>
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                      <span className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-1 text-sm font-medium text-white shadow-lg animate-pulse-slow">
-                        Most Popular
-                      </span>
+                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-20">
+                    <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
+                      Most Popular
                     </div>
-                    {/* Subtle glow behind popular card */}
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-sm -z-10" />
-                  </>
+                  </div>
                 )}
 
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {plan.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-6">
-                    {plan.description}
-                  </p>
+                <div
+                  className={`relative bg-white rounded-3xl p-8 transition-all duration-500 ${
+                    plan.popular
+                      ? 'border-2 border-indigo-400 shadow-glow-indigo'
+                      : 'border border-gray-200 shadow-lg hover:shadow-xl card-lift'
+                  }`}
+                >
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      {plan.name}
+                    </h3>
+                    <p className="text-gray-600 mb-8">
+                      {plan.description}
+                    </p>
 
-                  <div className="mb-8">
-                    <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                        {formatPrice(isYearly ? plan.yearlyPrice : plan.monthlyPrice)}
-                      </span>
-                      {plan.monthlyPrice > 0 && (
-                        <span className="text-sm text-gray-600">
-                          /month
+                    <div className="mb-8">
+                      <div className="flex items-baseline justify-center gap-1">
+                        <span className="text-5xl font-bold text-gray-900">
+                          {formatPrice(isYearly ? plan.yearlyPrice : plan.monthlyPrice)}
                         </span>
+                        {plan.monthlyPrice > 0 && (
+                          <span className="text-lg text-gray-600">
+                            /month
+                          </span>
+                        )}
+                      </div>
+                      {isYearly && plan.monthlyPrice > 0 && (
+                        <div className="text-sm text-gray-500 mt-2">
+                          Billed annually (₹{plan.yearlyPrice * 12})
+                        </div>
                       )}
                     </div>
-                    {isYearly && plan.monthlyPrice > 0 && (
-                      <div className="text-sm text-gray-500 mt-1">
-                        Billed annually (₹{plan.yearlyPrice * 12})
-                      </div>
-                    )}
+
+                    <Link href={plan.href} className="block mb-8">
+                      <Button
+                        size="lg"
+                        className={`w-full transition-all duration-300 ${
+                          plan.popular 
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-glow-indigo' 
+                            : 'border-gray-300 hover:bg-gray-50'
+                        }`}
+                        variant={plan.popular ? "primary" : "outline"}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </Link>
+
+                    <ul className="space-y-4 text-left">
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={feature} className="flex items-start gap-3">
+                          <svg
+                            className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
+                              plan.color === 'blue' 
+                                ? 'text-blue-500' 
+                                : plan.color === 'indigo'
+                                  ? 'text-indigo-500'
+                                  : 'text-purple-500'
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-
-                  <Link href={plan.href} className="block mb-8">
-                    <Button
-                      variant={plan.popular ? "primary" : "outline"}
-                      className={`w-full transition-all duration-300 ${
-                        plan.popular 
-                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-indigo hover:scale-[1.02]' 
-                          : 'glass hover:scale-[1.02] hover:shadow-lg'
-                      }`}
-                      size="lg"
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
-
-                  <ul className="space-y-4 text-left">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <svg
-                          className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
-                            plan.popular 
-                              ? 'text-indigo-500' 
-                              : plan.color === 'blue' 
-                                ? 'text-blue-500'
-                                : plan.color === 'purple'
-                                  ? 'text-purple-500'
-                                  : 'text-green-500'
-                          }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        <span className="text-sm text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-16 text-center">
-          <p className="text-gray-600 mb-4">
-            All plans include 14-day free trial • No setup fees • Cancel anytime
+        <div className="mt-20 text-center">
+          <p className="text-gray-600 text-lg mb-4">
+            All plans include 14-day trial • No setup fees • Cancel anytime
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-gray-500">
             Enterprise plans available for larger organizations.{" "}
-            <Link href="/contact" className="text-indigo-600 hover:text-indigo-500 hover:underline">
+            <Link href="/contact" className="text-indigo-600 hover:text-indigo-500 underline font-medium">
               Contact us
             </Link>{" "}
             for custom pricing.
