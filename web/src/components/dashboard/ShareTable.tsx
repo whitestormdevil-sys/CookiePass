@@ -4,6 +4,14 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import type { Share } from "@/types";
 
+function formatDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 // Demo data for now
 const demoShares: Share[] = [
   {
@@ -118,10 +126,10 @@ export function ShareTable() {
                 </Badge>
               </td>
               <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
-                {new Date(share.createdAt).toLocaleDateString()}
+                {formatDate(share.createdAt)}
               </td>
               <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
-                {new Date(share.expiresAt).toLocaleDateString()}
+                {formatDate(share.expiresAt)}
               </td>
               <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
                 {share.currentUses} / {share.maxUses}

@@ -60,7 +60,7 @@ export function ImportLog() {
               </div>
             </div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              {new Date(record.importedAt).toLocaleString()}
+              {new Date(record.importedAt).toISOString().replace("T", " ").slice(0, 19) + " UTC"}
             </span>
           </div>
         ))}

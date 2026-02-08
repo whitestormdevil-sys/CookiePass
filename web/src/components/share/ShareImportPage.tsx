@@ -163,7 +163,7 @@ export function ShareImportPage({ shareId }: ShareImportPageProps) {
                     Expires
                   </span>
                   <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    {new Date(preview.expiresAt).toLocaleString()}
+                    {new Date(preview.expiresAt).toISOString().replace("T", " ").slice(0, 19) + " UTC"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
