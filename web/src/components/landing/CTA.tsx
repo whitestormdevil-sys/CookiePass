@@ -1,84 +1,67 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import Link from 'next/link'
 
 export function CTA() {
   return (
-    <section className="py-24 sm:py-32 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 relative overflow-hidden">
-      {/* Animated mesh/orbs in background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full -translate-x-48 -translate-y-48 blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full translate-x-40 translate-y-40 blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/10 blob blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
-        
-        {/* Floating decorative elements */}
-        <div className="absolute top-20 right-20 w-4 h-4 bg-white/20 rounded-full animate-pulse-slow" />
-        <div className="absolute bottom-32 left-32 w-3 h-3 bg-white/30 rounded-full animate-pulse-slow" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-white/25 rounded-full animate-pulse-slow" style={{ animationDelay: '1.5s' }} />
-        
-        {/* Shimmer effect across section */}
-        <div className="absolute inset-0 shimmer opacity-20" />
-      </div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 py-24 sm:py-32">
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite_2s]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-[pulse_6s_ease-in-out_infinite]" />
+      
+      <div className="absolute top-20 left-1/4 w-2 h-2 bg-white/20 rounded-full" />
+      <div className="absolute top-40 right-1/3 w-3 h-3 bg-white/20 rounded-full" />
+      <div className="absolute bottom-32 left-1/3 w-2 h-2 bg-white/20 rounded-full" />
+      <div className="absolute top-1/3 right-20 w-2 h-2 bg-white/20 rounded-full" />
+      <div className="absolute bottom-20 right-1/4 w-3 h-3 bg-white/20 rounded-full" />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-4xl font-bold text-white mb-6 animate-fade-in-up">
-            Ready to share access{" "}
-            <span className="bg-gradient-to-r from-white to-indigo-100 bg-clip-text text-transparent">
-              securely?
-            </span>
-          </h2>
-          <p className="text-xl text-indigo-100 mb-8 animate-fade-in-up stagger-1">
-            Get started in under 30 seconds. No credit card required.
-          </p>
+      <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 text-center">
+        <h2 className="text-4xl font-bold text-white mb-6">
+          Ready to share access securely?
+        </h2>
+        <p className="text-xl text-indigo-100 mb-10">
+          Get started in under 30 seconds. No credit card required.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Link 
+            href="https://chromewebstore.google.com/detail/cookiepass" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto bg-white/90 text-indigo-600 rounded-2xl px-8 py-4 font-semibold hover:bg-white hover:scale-[1.02] shadow-lg transition-all duration-200 text-center"
+          >
+            Install Free Extension
+          </Link>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-2">
-            <Link
-              href={
-                process.env.NEXT_PUBLIC_CHROME_STORE_URL ||
-                "https://chrome.google.com/webstore"
-              }
-              target="_blank"
-            >
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="w-full sm:w-auto glass bg-white/90 text-indigo-600 border-white/30 hover:bg-white hover:scale-[1.02] transition-all duration-300 shadow-lg backdrop-blur-sm"
-              >
-                Install Free Extension
-              </Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button 
-                size="lg"
-                className="w-full sm:w-auto bg-white/20 hover:bg-white/30 text-white border-white/30 glass backdrop-blur-sm hover:scale-[1.02] transition-all duration-300 shadow-lg"
-              >
-                Create Account
-              </Button>
-            </Link>
-          </div>
+          <Link 
+            href="/auth/register" 
+            className="w-full sm:w-auto bg-white/20 border border-white/30 backdrop-blur-xl text-white rounded-2xl px-8 py-4 font-semibold hover:bg-white/30 hover:scale-[1.02] shadow-lg transition-all duration-200 text-center"
+          >
+            Create Account
+          </Link>
+        </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-indigo-100 animate-fade-in-up stagger-3">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full glass bg-white/10 backdrop-blur-sm">
-              <svg className="h-4 w-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Free forever plan
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full glass bg-white/10 backdrop-blur-sm">
-              <svg className="h-4 w-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              14-day Pro trial
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full glass bg-white/10 backdrop-blur-sm">
-              <svg className="h-4 w-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Cancel anytime
-            </div>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="text-white text-sm font-medium">Free forever plan</span>
+          </div>
+          
+          <div className="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="text-white text-sm font-medium">14-day Pro trial</span>
+          </div>
+          
+          <div className="flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-4 py-2">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="text-white text-sm font-medium">Cancel anytime</span>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }
