@@ -1,222 +1,98 @@
-const useCases = [
-  {
-    title: "Share Netflix with Family",
-    description: "Give family members access to your streaming accounts without sharing passwords. Set time limits and revoke access anytime.",
-    icon: "🎬",
-    tags: ["Personal", "Entertainment"],
-    example: "Share Netflix for the weekend while you're traveling",
-    stats: "Most popular use case"
-  },
-  {
-    title: "Team Testing Accounts",
-    description: "Share development and staging environment access with your team. Perfect for QA testing without creating multiple accounts.",
-    icon: "🧪",
-    tags: ["Development", "Testing"],
-    example: "Give QA team temporary access to staging environments",
-    stats: "Used by 500+ dev teams"
-  },
-  {
-    title: "Client Demos & Presentations",
-    description: "Show clients your work in progress without sharing credentials. Give them temporary access to preview environments.",
-    icon: "📊",
-    tags: ["Business", "Sales"],
-    example: "Let clients preview their website before launch",
-    stats: "Perfect for agencies"
-  },
-  {
-    title: "Virtual Assistant Access",
-    description: "Give your VA temporary access to manage social media, customer support, or other online tasks securely.",
-    icon: "👥",
-    tags: ["Business", "Productivity"],
-    example: "VA manages your social media for the week",
-    stats: "Trusted by remote teams"
-  },
-  {
-    title: "Emergency Access Sharing",
-    description: "When you're locked out or unavailable, quickly share access with trusted friends or family members.",
-    icon: "🆘",
-    tags: ["Emergency", "Personal"],
-    example: "Friend helps manage your online store while you're sick",
-    stats: "Peace of mind feature"
-  },
-  {
-    title: "Training & Onboarding",
-    description: "Give new team members temporary access to learn systems and processes. Perfect for training without permanent accounts.",
-    icon: "🎓",
-    tags: ["Education", "Training"],
-    example: "New employee learns the system with limited access",
-    stats: "Reduces onboarding time"
-  }
-];
-
-const benefits = [
-  {
-    icon: "🔒",
-    title: "No Password Sharing",
-    description: "Keep your actual passwords private and secure"
-  },
-  {
-    icon: "⏰",
-    title: "Time-Limited",
-    description: "Access expires automatically when you want it to"
-  },
-  {
-    icon: "🔄",
-    title: "Instantly Revocable",
-    description: "Cancel access immediately if needed"
-  },
-  {
-    icon: "📱",
-    title: "Works Everywhere",
-    description: "Any website, any browser, any device"
-  }
-];
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 export function UseCases() {
+  const { ref, isVisible } = useScrollAnimation();
+
+  const useCases = [
+    {
+      title: "Share streaming services",
+      description: "Give family and friends access to Netflix, Disney+, Hulu, and other streaming platforms without sharing your actual passwords.",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4l-2 9a1 1 0 001 1h12a1 1 0 001-1L17 4M9 9h6M9 13h6" />
+        </svg>
+      ),
+      benefits: ["Family plan sharing", "No password exposure", "Revoke anytime"],
+    },
+    {
+      title: "Temporary team access",
+      description: "Provide contractors, freelancers, or temporary staff access to internal tools and platforms with automatic expiration.",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+      benefits: ["Time-limited access", "No account creation", "Complete audit trail"],
+    },
+    {
+      title: "Client demonstrations",
+      description: "Show your products and services to clients by sharing access to admin panels, dashboards, or demo environments.",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      ),
+      benefits: ["Secure demos", "Usage tracking", "Professional impression"],
+    },
+    {
+      title: "Virtual assistant access",
+      description: "Grant your VA or support team temporary access to manage your accounts without compromising your login credentials.",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      ),
+      benefits: ["Delegate safely", "Monitor activity", "Instant revocation"],
+    },
+  ];
+
   return (
-    <section className="py-24 bg-white dark:bg-gray-950/30">
+    <section className="py-24 sm:py-32 bg-gray-50">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Header */}
-        <div className="mx-auto max-w-3xl text-center mb-20">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-primary-600 dark:text-primary-400 mb-4">
-            Use Cases
+        <div className="mx-auto max-w-2xl text-center mb-16">
+          <p className="text-section-label text-indigo-600 mb-4">Use Cases</p>
+          <h2 className="text-section-heading font-semibold text-gray-900 mb-6">
+            Built for real-world sharing
           </h2>
-          <h3 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl mb-6">
-            Perfect for{" "}
-            <span className="bg-gradient-to-r from-primary-500 to-indigo-500 bg-clip-text text-transparent">
-              every scenario
-            </span>
-          </h3>
-          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-            From personal sharing to enterprise workflows, CookiePass adapts to your needs
-            while keeping security at the forefront.
+          <p className="text-lg text-gray-600">
+            From personal use to enterprise scenarios, CookiePass adapts to your needs.
           </p>
         </div>
 
-        {/* Benefits strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {benefits.map((benefit, index) => (
-            <div
-              key={index}
-              className="text-center p-6 rounded-2xl bg-gray-50/50 dark:bg-gray-800/30 border border-gray-200/50 dark:border-gray-700/50"
-            >
-              <div className="text-3xl mb-3">{benefit.icon}</div>
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                {benefit.title}
-              </h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {benefit.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Use cases grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {useCases.map((useCase, index) => (
-            <div
-              key={index}
-              className="group relative rounded-3xl border border-gray-200/50 bg-white/80 backdrop-blur-sm p-8 transition-all duration-300 hover:shadow-2xl hover:border-primary-200 dark:border-gray-700/50 dark:bg-gray-900/80 dark:hover:border-primary-800"
-            >
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary-500/5 via-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <div className="relative">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="text-4xl">{useCase.icon}</div>
-                    <div>
-                      <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                        {useCase.title}
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {useCase.tags.map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="inline-flex items-center rounded-full bg-primary-50 dark:bg-primary-900/30 px-2 py-1 text-xs font-medium text-primary-700 dark:text-primary-300"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex-shrink-0 text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 rounded-full px-2 py-1">
-                    {useCase.stats}
-                  </div>
+        <div 
+          ref={ref}
+          className={`animate-on-scroll ${isVisible ? 'visible' : ''}`}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {useCases.map((useCase) => (
+              <div 
+                key={useCase.title}
+                className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 card-hover"
+              >
+                <div className="flex items-center justify-center h-16 w-16 rounded-xl bg-indigo-100 text-indigo-600 mb-6">
+                  {useCase.icon}
                 </div>
-
-                {/* Description */}
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                  {useCase.title}
+                </h3>
+                
+                <p className="text-gray-600 mb-6 leading-7">
                   {useCase.description}
                 </p>
-
-                {/* Example */}
-                <div className="bg-gray-50/50 dark:bg-gray-800/30 rounded-xl p-4 border border-gray-200/50 dark:border-gray-700/50">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 h-6 w-6 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
-                      <svg className="h-3 w-3 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                
+                <ul className="space-y-2">
+                  {useCase.benefits.map((benefit) => (
+                    <li key={benefit} className="flex items-center gap-3 text-sm text-gray-600">
+                      <svg className="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">
-                        Example scenario:
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        "{useCase.example}"
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom section */}
-        <div className="mt-20 text-center">
-          <div className="bg-gradient-to-r from-primary-50 to-indigo-50 dark:from-primary-950/50 dark:to-indigo-950/50 rounded-3xl p-8 border border-primary-200/50 dark:border-primary-800/50">
-            <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Have a different use case?
-            </h4>
-            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-              CookiePass works with any website that uses cookies for authentication.
-              If you can log in with cookies, you can share it with CookiePass.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 dark:text-gray-400">
-              <span className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                E-commerce platforms
-              </span>
-              <span className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                Social media
-              </span>
-              <span className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                SaaS tools
-              </span>
-              <span className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                Development tools
-              </span>
-              <span className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                And much more...
-              </span>
-            </div>
+            ))}
           </div>
         </div>
       </div>
