@@ -4,6 +4,8 @@ import { useState, FormEvent } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { api } from "@/lib/api";
+import { setTokens } from "@/lib/auth";
 
 export function RegisterForm() {
   const [name, setName] = useState("");
@@ -30,13 +32,12 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
-      // TODO: Connect to API
-      // const res = await api.auth.register(email, password, name);
-      // if (!res.success) throw new Error(res.error);
-      // setTokens(res.data.accessToken, res.data.refreshToken);
-      // router.push('/dashboard');
-
-      await new Promise((r) => setTimeout(r, 1000));
+      const res = await api.auth.register(email, password, name);
+      if (!res.success) {
+        throw new Error(res.error || "Registration failed");
+      }
+      const data = res.data as { data: { token: string; user: { id: string; email: string } } };
+      setTokens(data.data.token, "");
       window.location.href = "/dashboard";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
