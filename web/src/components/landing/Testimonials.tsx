@@ -67,7 +67,7 @@ export function Testimonials() {
             <div
               key={testimonial.author}
               className={`
-                bg-white rounded-3xl p-8 border border-gray-200 shadow-sm
+                bg-white rounded-3xl p-8 border border-gray-200 shadow-md
                 hover:-translate-y-1 hover:shadow-lg transition-all duration-500 ease-out
                 ${testimonial.rotation}
                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}

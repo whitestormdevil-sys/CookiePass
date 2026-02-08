@@ -39,7 +39,7 @@ export function Features() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 scroll-reveal opacity-0 translate-y-[30px] transition-all duration-700 delay-100">
-            <div className="group h-full p-10 rounded-3xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
+            <div className="group h-full p-10 rounded-3xl bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-200 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
               <div className="flex flex-col lg:flex-row items-center gap-8 h-full">
                 <div className="flex-1">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-emerald-200">
@@ -75,7 +75,7 @@ export function Features() {
           </div>
 
           <div className="lg:col-span-1 scroll-reveal opacity-0 translate-y-[30px] transition-all duration-700 delay-200">
-            <div className="group h-full p-8 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
+            <div className="group h-full p-8 rounded-3xl bg-gradient-to-br from-blue-100 to-indigo-100 border border-blue-200 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -89,7 +89,7 @@ export function Features() {
           </div>
 
           <div className="lg:col-span-1 scroll-reveal opacity-0 translate-y-[30px] transition-all duration-700 delay-300">
-            <div className="group h-full p-8 rounded-3xl bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
+            <div className="group h-full p-8 rounded-3xl bg-gradient-to-br from-violet-100 to-purple-100 border border-violet-200 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center mb-4 shadow-lg shadow-violet-200">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -103,7 +103,7 @@ export function Features() {
           </div>
 
           <div className="lg:col-span-2 scroll-reveal opacity-0 translate-y-[30px] transition-all duration-700 delay-400">
-            <div className="group h-full p-10 rounded-3xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
+            <div className="group h-full p-10 rounded-3xl bg-gradient-to-br from-orange-100 to-amber-100 border border-orange-200 hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
               <div className="flex flex-col lg:flex-row gap-8 h-full">
                 <div className="flex-1">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-4 shadow-lg shadow-orange-200">

@@ -27,8 +27,8 @@ export function UseCases() {
     {
       title: 'Share Netflix, Disney+, Hulu access',
       description: 'Let family members use streaming accounts without sharing passwords. Secure, temporary access that expires automatically when no longer needed.',
-      gradient: 'from-red-50 to-orange-50',
-      border: 'border-red-100',
+      gradient: 'from-red-100 to-orange-100',
+      border: 'border-red-200',
       iconBg: 'bg-red-500',
       icon: (
         <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -40,8 +40,8 @@ export function UseCases() {
     {
       title: 'Give team members tool access',
       description: 'Share access to development tools, SaaS platforms, and dashboards without exposing credentials. Perfect for agencies and remote teams.',
-      gradient: 'from-blue-50 to-indigo-50',
-      border: 'border-blue-100',
+      gradient: 'from-blue-100 to-indigo-100',
+      border: 'border-blue-200',
       iconBg: 'bg-blue-500',
       icon: (
         <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -52,8 +52,8 @@ export function UseCases() {
     {
       title: 'Share client account access securely',
       description: 'Freelancers and agencies can provide managed access to client accounts without revealing login details. Maintain security while delivering work.',
-      gradient: 'from-emerald-50 to-teal-50',
-      border: 'border-emerald-100',
+      gradient: 'from-emerald-100 to-teal-100',
+      border: 'border-emerald-200',
       iconBg: 'bg-emerald-500',
       icon: (
         <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -64,8 +64,8 @@ export function UseCases() {
     {
       title: 'Delegate without exposing credentials',
       description: 'Give virtual assistants access to specific accounts without sharing passwords. Revoke access instantly when tasks are complete.',
-      gradient: 'from-purple-50 to-violet-50',
-      border: 'border-purple-100',
+      gradient: 'from-purple-100 to-violet-100',
+      border: 'border-purple-200',
       iconBg: 'bg-purple-500',
       icon: (
         <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
