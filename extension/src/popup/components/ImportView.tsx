@@ -4,6 +4,7 @@ import { parseShareLink } from '@/utils/validators';
 import { shares as sharesApi } from '@/lib/api';
 import { decrypt } from '@/lib/crypto';
 import { addImportHistory } from '@/lib/storage';
+import { hasPermission, requestPermission } from '@/lib/permissions';
 
 interface ImportViewProps {
   user: User | null;
@@ -78,8 +79,22 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
 
   const handleImport = useCallback(async () => {
     if (!preview) return;
-    setStep('importing');
     setError(null);
+
+    // Request host permission FIRST (while still in user gesture context)
+    const targetUrl = `https://${preview.domain}`;
+    const alreadyHasPermission = await hasPermission(targetUrl);
+    if (!alreadyHasPermission) {
+      const granted = await requestPermission(targetUrl);
+      if (!granted) {
+        setError(
+          `Permission denied for ${preview.domain}. CookiePass needs access to set cookies on this site.`
+        );
+        return;
+      }
+    }
+
+    setStep('importing');
 
     try {
       // Fetch encrypted data
@@ -115,24 +130,39 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
         throw new Error(response.error || 'Failed to set cookies');
       }
 
-      // Set localStorage if included
-      if (decrypted.localStorage) {
+      // Open the target site FIRST (needed for localStorage/sessionStorage injection)
+      const openTargetUrl = `https://${preview.domain}`;
+      if (decrypted.localStorage || decrypted.sessionStorage) {
+        // Open tab and wait for it to load before injecting storage
         await new Promise<void>((resolve) => {
           chrome.runtime.sendMessage(
-            { type: 'SET_LOCAL_STORAGE', payload: { data: decrypted.localStorage } },
-            () => resolve()
+            { type: 'OPEN_TAB', payload: { url: openTargetUrl } },
+            () => {
+              // Give the page a moment to load
+              setTimeout(resolve, 2000);
+            }
           );
         });
-      }
 
-      // Set sessionStorage if included
-      if (decrypted.sessionStorage) {
-        await new Promise<void>((resolve) => {
-          chrome.runtime.sendMessage(
-            { type: 'SET_SESSION_STORAGE', payload: { data: decrypted.sessionStorage } },
-            () => resolve()
-          );
-        });
+        // Set localStorage if included
+        if (decrypted.localStorage) {
+          await new Promise<void>((resolve) => {
+            chrome.runtime.sendMessage(
+              { type: 'SET_LOCAL_STORAGE', payload: { data: decrypted.localStorage } },
+              () => resolve()
+            );
+          });
+        }
+
+        // Set sessionStorage if included
+        if (decrypted.sessionStorage) {
+          await new Promise<void>((resolve) => {
+            chrome.runtime.sendMessage(
+              { type: 'SET_SESSION_STORAGE', payload: { data: decrypted.sessionStorage } },
+              () => resolve()
+            );
+          });
+        }
       }
 
       // Record import
@@ -153,9 +183,10 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
       setImportResult(response.data || { success: decrypted.cookies.length, failed: 0 });
       setStep('result');
 
-      // Open the target site
-      const targetUrl = `https://${preview.domain}`;
-      chrome.runtime.sendMessage({ type: 'OPEN_TAB', payload: { url: targetUrl } });
+      // Open the target site (if we haven't already for storage)
+      if (!decrypted.localStorage && !decrypted.sessionStorage) {
+        chrome.runtime.sendMessage({ type: 'OPEN_TAB', payload: { url: openTargetUrl } });
+      }
     } catch (err) {
       setError(
         err instanceof Error
