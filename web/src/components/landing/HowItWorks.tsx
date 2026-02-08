@@ -8,6 +8,11 @@ export function HowItWorks() {
       number: "01",
       title: "Share Your Session",
       description: "Install our extension and share any logged-in website with one click.",
+      color: "blue",
+      bgColor: "bg-blue-100",
+      textColor: "text-blue-600",
+      borderColor: "border-blue-200",
+      shadowColor: "shadow-blue",
       icon: (
         <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
@@ -18,6 +23,11 @@ export function HowItWorks() {
       number: "02", 
       title: "Secure Encryption",
       description: "Your session data is encrypted with AES-256 before transmission.",
+      color: "purple",
+      bgColor: "bg-purple-100",
+      textColor: "text-purple-600",
+      borderColor: "border-purple-200",
+      shadowColor: "shadow-purple",
       icon: (
         <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -28,6 +38,11 @@ export function HowItWorks() {
       number: "03",
       title: "Recipient Access",
       description: "Recipients import the session with a password and get instant access.",
+      color: "emerald",
+      bgColor: "bg-emerald-100",
+      textColor: "text-emerald-600",
+      borderColor: "border-emerald-200",
+      shadowColor: "shadow-emerald",
       icon: (
         <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -37,7 +52,7 @@ export function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 sm:py-32">
+    <section id="how-it-works" className="py-24 sm:py-32 bg-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center mb-16">
           <p className="text-section-label text-indigo-600 mb-4">How It Works</p>
@@ -56,20 +71,29 @@ export function HowItWorks() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {steps.map((step, index) => (
               <div key={step.number} className="relative">
-                {/* Connection line */}
+                {/* Connection line - now dashed gradient */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-16 left-full w-full h-px bg-gradient-to-r from-gray-300 to-transparent transform translate-x-6" />
+                  <div className="hidden lg:block absolute top-16 left-full w-full h-px transform translate-x-6">
+                    <div className="h-full w-full bg-gradient-to-r from-indigo-300 via-purple-300 to-transparent opacity-60" style={{
+                      backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 4px, currentColor 4px, currentColor 8px)'
+                    }} />
+                  </div>
                 )}
                 
-                {/* Step card */}
-                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 card-hover">
-                  <div className="flex items-center justify-center h-16 w-16 rounded-xl bg-indigo-100 text-indigo-600 mb-6 mx-auto">
+                {/* Large watermark number */}
+                <div className="absolute top-4 right-4 text-8xl font-bold opacity-5 text-gray-900 pointer-events-none select-none">
+                  {step.number}
+                </div>
+                
+                {/* Step card - with staggered animation */}
+                <div className={`relative z-10 bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover-lift-${step.color} hover:${step.shadowColor} transition-all duration-300 animate-slide-up stagger-${index + 1}`}>
+                  <div className={`flex items-center justify-center h-16 w-16 rounded-xl ${step.bgColor} ${step.textColor} mb-6 mx-auto`}>
                     {step.icon}
                   </div>
                   
                   <div className="text-center">
-                    <div className="text-sm font-semibold text-indigo-600 mb-2">
-                      {step.number}
+                    <div className={`text-sm font-semibold ${step.textColor} mb-2`}>
+                      Step {step.number}
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">
                       {step.title}

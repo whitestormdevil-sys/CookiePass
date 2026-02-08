@@ -1,7 +1,15 @@
 export function TrustStrip() {
   const websites = [
-    "Netflix", "GitHub", "Spotify", "Amazon", "Google", 
-    "Slack", "Notion", "Figma", "Discord", "YouTube"
+    { name: "Netflix", color: "bg-red-50 border-red-200/50 text-red-700 hover:bg-red-100" },
+    { name: "GitHub", color: "bg-gray-50 border-gray-200/50 text-gray-700 hover:bg-gray-100" },
+    { name: "Spotify", color: "bg-green-50 border-green-200/50 text-green-700 hover:bg-green-100" },
+    { name: "Amazon", color: "bg-orange-50 border-orange-200/50 text-orange-700 hover:bg-orange-100" },
+    { name: "Google", color: "bg-blue-50 border-blue-200/50 text-blue-700 hover:bg-blue-100" },
+    { name: "Slack", color: "bg-purple-50 border-purple-200/50 text-purple-700 hover:bg-purple-100" },
+    { name: "Notion", color: "bg-gray-50 border-gray-200/50 text-gray-700 hover:bg-gray-100" },
+    { name: "Figma", color: "bg-pink-50 border-pink-200/50 text-pink-700 hover:bg-pink-100" },
+    { name: "Discord", color: "bg-indigo-50 border-indigo-200/50 text-indigo-700 hover:bg-indigo-100" },
+    { name: "YouTube", color: "bg-red-50 border-red-200/50 text-red-700 hover:bg-red-100" }
   ];
 
   return (
@@ -14,13 +22,13 @@ export function TrustStrip() {
           </h2>
         </div>
         
-        <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
-          {websites.map((website) => (
+        <div className="flex flex-wrap justify-center items-center gap-4">
+          {websites.map((website, index) => (
             <div
-              key={website}
-              className="text-lg font-medium text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              key={website.name}
+              className={`px-4 py-2 rounded-full border backdrop-blur-sm font-medium text-sm transition-all duration-300 hover:scale-105 animate-fade-in-up stagger-${(index % 6) + 1} ${website.color}`}
             >
-              {website}
+              {website.name}
             </div>
           ))}
         </div>

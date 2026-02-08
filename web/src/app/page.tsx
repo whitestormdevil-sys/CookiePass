@@ -15,6 +15,7 @@ import { Testimonials } from "@/components/landing/Testimonials";
 import { FAQ } from "@/components/landing/FAQ";
 import { CTA } from "@/components/landing/CTA";
 import { Footer } from "@/components/landing/Footer";
+import { WavyDivider } from "@/components/ui/WavyDivider";
 
 function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   if (!isOpen) return null;
@@ -165,12 +166,14 @@ export default function HomePage() {
 
       <main>
         <Hero />
+        <WavyDivider color="#f9fafb" />
         <TrustStrip />
         <HowItWorks />
         <Features />
         <UseCases />
         <Security />
         <Stats />
+        <WavyDivider color="#ffffff" flip />
         <Pricing />
         <Testimonials />
         <FAQ />

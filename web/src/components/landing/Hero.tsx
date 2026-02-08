@@ -4,34 +4,40 @@ import { Button } from "@/components/ui/Button";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden gradient-hero py-24 sm:py-32">
-      {/* Subtle gradient background */}
+    <section className="relative overflow-hidden gradient-hero py-24 sm:py-32 noise">
+      {/* Animated blob shapes in background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/30" />
-        <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 h-96 w-96 rounded-full bg-gradient-to-br from-indigo-100/40 to-purple-100/20 blur-3xl" />
-        <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 h-80 w-80 rounded-full bg-gradient-to-br from-blue-100/30 to-indigo-100/40 blur-3xl" />
+        
+        {/* Organic floating blobs */}
+        <div className="absolute top-20 right-20 w-80 h-80 bg-gradient-to-br from-indigo-200/40 to-purple-300/20 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-32 left-16 w-96 h-96 bg-gradient-to-br from-purple-200/30 to-indigo-200/40 blob blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-indigo-300/20 to-blue-200/30 blob blur-2xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+        
+        {/* Subtle grain texture overlay */}
+        <div className="absolute inset-0 opacity-[0.02] bg-noise" />
       </div>
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left side - Content */}
           <div className="flex flex-col">
-            {/* Trust badges */}
-            <div className="mb-8 flex flex-wrap gap-6 text-sm text-gray-600">
-              <div className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Trust badges - now with pill shapes and colors */}
+            <div className="mb-8 flex flex-wrap gap-4 text-sm">
+              <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50/80 border border-emerald-200/50 text-emerald-700 rounded-full backdrop-blur-sm">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
                 <span className="font-medium">AES-256 Encrypted</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-2 px-4 py-2 bg-blue-50/80 border border-blue-200/50 text-blue-700 rounded-full backdrop-blur-sm">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
                 <span className="font-medium">Open Source</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <svg className="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-2 px-4 py-2 bg-purple-50/80 border border-purple-200/50 text-purple-700 rounded-full backdrop-blur-sm">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
@@ -52,7 +58,7 @@ export function Hero() {
               Securely grant temporary access to any website. Time-limited, revocable, and encrypted end-to-end.
             </p>
 
-            {/* CTAs */}
+            {/* CTAs - with enhanced hover effects */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Link
                 href={
@@ -61,12 +67,12 @@ export function Hero() {
                 }
                 target="_blank"
               >
-                <Button size="lg" className="w-full sm:w-auto shadow-lg hover:shadow-xl">
+                <Button size="lg" className="w-full sm:w-auto shadow-lg hover:shadow-indigo hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
                   Install Free Extension
                 </Button>
               </Link>
               <Link href="#how-it-works">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto border-gray-300 hover:bg-gray-50">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto border-gray-300 hover:bg-gray-50 hover:shadow-lg transition-all duration-300 hover:scale-[1.02] glass backdrop-blur-sm">
                   See How It Works
                 </Button>
               </Link>
@@ -78,10 +84,10 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right side - Product mockup */}
+          {/* Right side - Product mockup with enhanced animations */}
           <div className="relative">
-            {/* Main browser window */}
-            <div className="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+            {/* Main browser window with subtle float */}
+            <div className="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden animate-float hover-lift-indigo">
               {/* Browser chrome */}
               <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <div className="flex gap-2">
@@ -133,7 +139,7 @@ export function Hero() {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
                   </div>
-                  <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg">
+                  <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium py-3 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02] shimmer">
                     Import & Open Netflix
                   </button>
                 </div>
@@ -149,14 +155,14 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Floating security badge */}
-            <div className="absolute -top-4 -right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+            {/* Floating security badge - with subtle pulse */}
+            <div className="absolute -top-4 -right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg animate-pulse-slow">
               🔐 Secure
             </div>
 
-            {/* Floating stat cards */}
-            <div className="absolute -bottom-6 -left-6 bg-white rounded-lg shadow-xl border border-gray-200 p-4 max-w-xs">
-              <div className="text-2xl font-bold text-indigo-600">10,000+</div>
+            {/* Floating stat cards - with enhanced styling */}
+            <div className="absolute -bottom-6 -left-6 glass bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/40 p-4 max-w-xs animate-pulse-slow hover-lift-purple" style={{ animationDelay: '0.5s' }}>
+              <div className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">10,000+</div>
               <div className="text-sm text-gray-600">Sessions Shared Securely</div>
             </div>
           </div>

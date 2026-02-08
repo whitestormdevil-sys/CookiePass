@@ -62,13 +62,21 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-slate-900 text-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20">
+    <footer className="bg-slate-900 text-white relative overflow-hidden">
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-800/50 to-slate-900" />
+      
+      {/* Subtle top gradient border */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent" />
+      
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-20 relative">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <Image src="/logo.svg" alt="CookiePass" width={32} height={32} />
+            <Link href="/" className="flex items-center gap-2.5 mb-4 group">
+              <div className="p-1 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 group-hover:scale-105 transition-transform">
+                <Image src="/logo.svg" alt="CookiePass" width={28} height={28} className="invert" />
+              </div>
               <span className="text-xl font-bold">CookiePass</span>
             </Link>
             <p className="text-slate-400 mb-6 max-w-sm">
@@ -76,23 +84,25 @@ export function Footer() {
               Military-grade encryption for peace of mind.
             </p>
             
-            {/* Social links */}
+            {/* Social links with hover glow */}
             <div className="flex gap-4 mb-6">
               {socialLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-slate-400 hover:text-white transition-colors"
+                  className="text-slate-400 hover:text-white transition-all duration-300 p-2 rounded-lg hover:bg-slate-800 hover:shadow-lg hover:shadow-indigo-500/20 group"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <span className="sr-only">{link.name}</span>
-                  {link.icon}
+                  <div className="group-hover:scale-110 transition-transform">
+                    {link.icon}
+                  </div>
                 </Link>
               ))}
             </div>
 
-            {/* Newsletter */}
+            {/* Newsletter with enhanced styling */}
             <div>
               <h3 className="text-sm font-semibold text-white mb-3">
                 Stay Updated
@@ -101,9 +111,9 @@ export function Footer() {
                 <input
                   type="email"
                   placeholder="Enter email"
-                  className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
                 />
-                <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-medium transition-colors">
+                <button className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25">
                   Subscribe
                 </button>
               </div>
@@ -112,13 +122,16 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Product</h3>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <div className="h-1 w-1 bg-indigo-500 rounded-full" />
+              Product
+            </h3>
             <ul className="space-y-3">
               {navigation.product.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                    className="text-sm text-slate-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                   >
                     {item.name}
                   </Link>
@@ -129,13 +142,16 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Support</h3>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <div className="h-1 w-1 bg-emerald-500 rounded-full" />
+              Support
+            </h3>
             <ul className="space-y-3">
               {navigation.support.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                    className="text-sm text-slate-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                   >
                     {item.name}
                   </Link>
@@ -146,13 +162,16 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Legal</h3>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <div className="h-1 w-1 bg-orange-500 rounded-full" />
+              Legal
+            </h3>
             <ul className="space-y-3">
               {navigation.legal.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                    className="text-sm text-slate-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                   >
                     {item.name}
                   </Link>
@@ -163,13 +182,16 @@ export function Footer() {
 
           {/* Developers */}
           <div>
-            <h3 className="text-sm font-semibold text-white mb-4">Developers</h3>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <div className="h-1 w-1 bg-purple-500 rounded-full" />
+              Developers
+            </h3>
             <ul className="space-y-3">
               {navigation.developers.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-400 hover:text-white transition-colors"
+                    className="text-sm text-slate-400 hover:text-white transition-all duration-300 hover:translate-x-1"
                     target={item.href.startsWith('http') ? "_blank" : undefined}
                     rel={item.href.startsWith('http') ? "noopener noreferrer" : undefined}
                   >
@@ -181,31 +203,31 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
+        {/* Bottom bar with enhanced gradient */}
         <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-6 text-sm text-slate-400">
             <span>© 2026 CookiePass. All rights reserved.</span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-orange-500/10 to-green-500/10 border border-orange-500/20">
               <span>Made in India</span>
-              <span className="text-orange-500">🇮🇳</span>
+              <span className="text-orange-500 animate-pulse">🇮🇳</span>
             </div>
           </div>
           <div className="flex items-center gap-6">
             <Link
               href="/privacy"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
+              className="text-sm text-slate-400 hover:text-white transition-colors hover:underline"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
+              className="text-sm text-slate-400 hover:text-white transition-colors hover:underline"
             >
               Terms
             </Link>
             <Link
               href="/cookies"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
+              className="text-sm text-slate-400 hover:text-white transition-colors hover:underline"
             >
               Cookies
             </Link>

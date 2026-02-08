@@ -25,6 +25,7 @@ export function Pricing() {
       cta: "Get Started Free",
       href: "/auth/register",
       popular: false,
+      color: "blue",
     },
     {
       name: "Pro",
@@ -43,6 +44,7 @@ export function Pricing() {
       cta: "Start Pro Trial",
       href: "/auth/register?plan=pro",
       popular: true,
+      color: "indigo",
     },
     {
       name: "Team",
@@ -62,6 +64,7 @@ export function Pricing() {
       cta: "Start Team Trial",
       href: "/auth/register?plan=team",
       popular: false,
+      color: "purple",
     },
   ];
 
@@ -71,7 +74,7 @@ export function Pricing() {
   };
 
   return (
-    <section id="pricing" className="py-24 sm:py-32">
+    <section id="pricing" className="py-24 sm:py-32 bg-white">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center mb-16">
           <p className="text-section-label text-indigo-600 mb-4">Pricing</p>
@@ -82,29 +85,33 @@ export function Pricing() {
             Start free and upgrade as you grow. No hidden fees, cancel anytime.
           </p>
 
-          {/* Billing toggle */}
-          <div className="flex items-center justify-center gap-4">
-            <span className={`text-sm font-medium ${!isYearly ? 'text-gray-900' : 'text-gray-500'}`}>
-              Monthly
-            </span>
+          {/* Enhanced billing toggle */}
+          <div className="flex items-center justify-center gap-4 p-1 bg-gray-100 rounded-full max-w-xs mx-auto">
             <button
-              onClick={() => setIsYearly(!isYearly)}
-              className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={() => setIsYearly(false)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                !isYearly 
+                  ? 'bg-white text-gray-900 shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  isYearly ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
+              Monthly
             </button>
-            <span className={`text-sm font-medium ${isYearly ? 'text-gray-900' : 'text-gray-500'}`}>
+            <button
+              onClick={() => setIsYearly(true)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative ${
+                isYearly 
+                  ? 'bg-white text-gray-900 shadow-sm' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
               Yearly
-            </span>
-            {isYearly && (
-              <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                Save 20%
-              </span>
-            )}
+              {isYearly && (
+                <span className="absolute -top-2 -right-2 inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                  Save 20%
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
@@ -113,21 +120,25 @@ export function Pricing() {
           className={`animate-on-scroll ${isVisible ? 'visible' : ''}`}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <div
                 key={plan.name}
-                className={`relative bg-white rounded-2xl border-2 p-8 shadow-sm card-hover ${
+                className={`relative bg-white rounded-3xl border-2 p-8 transition-all duration-300 animate-fade-in-up stagger-${index + 1} ${
                   plan.popular
-                    ? 'border-indigo-600 ring-1 ring-indigo-600'
-                    : 'border-gray-200'
+                    ? 'border-indigo-200 shadow-indigo scale-110 z-10 shadow-2xl glass backdrop-blur-sm'
+                    : 'border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-2'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="inline-flex items-center rounded-full bg-indigo-600 px-4 py-1 text-sm font-medium text-white">
-                      Most Popular
-                    </span>
-                  </div>
+                  <>
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <span className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-1 text-sm font-medium text-white shadow-lg animate-pulse-slow">
+                        Most Popular
+                      </span>
+                    </div>
+                    {/* Subtle glow behind popular card */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-20 blur-sm -z-10" />
+                  </>
                 )}
 
                 <div className="text-center">
@@ -140,12 +151,12 @@ export function Pricing() {
 
                   <div className="mb-8">
                     <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-5xl font-bold text-gray-900">
+                      <span className="text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                         {formatPrice(isYearly ? plan.yearlyPrice : plan.monthlyPrice)}
                       </span>
                       {plan.monthlyPrice > 0 && (
                         <span className="text-sm text-gray-600">
-                          /{isYearly ? 'month' : 'month'}
+                          /month
                         </span>
                       )}
                     </div>
@@ -159,7 +170,11 @@ export function Pricing() {
                   <Link href={plan.href} className="block mb-8">
                     <Button
                       variant={plan.popular ? "primary" : "outline"}
-                      className="w-full"
+                      className={`w-full transition-all duration-300 ${
+                        plan.popular 
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-indigo hover:scale-[1.02]' 
+                          : 'glass hover:scale-[1.02] hover:shadow-lg'
+                      }`}
                       size="lg"
                     >
                       {plan.cta}
@@ -167,10 +182,18 @@ export function Pricing() {
                   </Link>
 
                   <ul className="space-y-4 text-left">
-                    {plan.features.map((feature) => (
+                    {plan.features.map((feature, featureIndex) => (
                       <li key={feature} className="flex items-start gap-3">
                         <svg
-                          className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0"
+                          className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
+                            plan.popular 
+                              ? 'text-indigo-500' 
+                              : plan.color === 'blue' 
+                                ? 'text-blue-500'
+                                : plan.color === 'purple'
+                                  ? 'text-purple-500'
+                                  : 'text-green-500'
+                          }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -198,7 +221,7 @@ export function Pricing() {
           </p>
           <p className="text-sm text-gray-500">
             Enterprise plans available for larger organizations.{" "}
-            <Link href="/contact" className="text-indigo-600 hover:text-indigo-500">
+            <Link href="/contact" className="text-indigo-600 hover:text-indigo-500 hover:underline">
               Contact us
             </Link>{" "}
             for custom pricing.

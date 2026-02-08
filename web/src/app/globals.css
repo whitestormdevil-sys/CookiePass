@@ -29,6 +29,87 @@
     @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
   }
   
+  /* Glass effect */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
+
+  /* Gradient borders */
+  .gradient-border {
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #6663f2, #8b82f8, #553bca) border-box;
+    border: 2px solid transparent;
+  }
+
+  /* Noise texture overlay */
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Blob shape */
+  .blob {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: blob 8s ease-in-out infinite;
+  }
+
+  /* Wavy section divider */
+  .wavy-divider {
+    position: relative;
+    height: 60px;
+    overflow: hidden;
+  }
+
+  .wavy-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1200 120L0 16.48V0h1200v120z' fill='%23f8fafc'/%3E%3C/svg%3E") repeat-x;
+    background-size: 1200px 60px;
+  }
+
+  /* Colored shadows */
+  .shadow-indigo {
+    box-shadow: 0 20px 60px -15px rgba(102, 99, 242, 0.25);
+  }
+  
+  .shadow-purple {
+    box-shadow: 0 20px 60px -15px rgba(139, 130, 248, 0.25);
+  }
+
+  .shadow-emerald {
+    box-shadow: 0 20px 60px -15px rgba(16, 185, 129, 0.25);
+  }
+
+  .shadow-red {
+    box-shadow: 0 20px 60px -15px rgba(239, 68, 68, 0.25);
+  }
+
+  /* Shimmer effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 2s infinite;
+  }
+  
   /* Subtle gradient backgrounds */
   .gradient-subtle {
     background: linear-gradient(135deg, #f8f9fa 0%, #f3f4f6 100%);
@@ -36,6 +117,19 @@
   
   .gradient-hero {
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+  }
+
+  /* Mesh gradient backgrounds */
+  .gradient-mesh-1 {
+    background: radial-gradient(ellipse at 20% 50%, rgba(102, 99, 242, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(139, 130, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(85, 59, 202, 0.06) 0%, transparent 50%);
+  }
+
+  .gradient-mesh-2 {
+    background: radial-gradient(ellipse at 60% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(139, 130, 248, 0.04) 0%, transparent 50%);
   }
   
   /* Typography utilities for 1Password style */
@@ -55,5 +149,35 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 600;
+  }
+
+  /* Staggered animation delays */
+  .stagger-1 { animation-delay: 100ms; }
+  .stagger-2 { animation-delay: 200ms; }
+  .stagger-3 { animation-delay: 300ms; }
+  .stagger-4 { animation-delay: 400ms; }
+  .stagger-5 { animation-delay: 500ms; }
+  .stagger-6 { animation-delay: 600ms; }
+
+  /* Hover effects with colored shadows */
+  .hover-lift-indigo {
+    @apply transition-all duration-300 hover:scale-105 hover:-translate-y-1;
+  }
+  .hover-lift-indigo:hover {
+    filter: drop-shadow(0 20px 30px rgba(102, 99, 242, 0.2));
+  }
+
+  .hover-lift-purple {
+    @apply transition-all duration-300 hover:scale-105 hover:-translate-y-1;
+  }
+  .hover-lift-purple:hover {
+    filter: drop-shadow(0 20px 30px rgba(139, 130, 248, 0.2));
+  }
+
+  .hover-lift-emerald {
+    @apply transition-all duration-300 hover:scale-105 hover:-translate-y-1;
+  }
+  .hover-lift-emerald:hover {
+    filter: drop-shadow(0 20px 30px rgba(16, 185, 129, 0.2));
   }
 }
