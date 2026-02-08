@@ -1,9 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { clsx } from "clsx";
+import { api } from "@/lib/api";
+import { logout, isAuthenticated } from "@/lib/auth";
+import type { User } from "@/types";
 
 const navItems = [
   {
@@ -37,7 +42,57 @@ const navItems = [
 ];
 
 export function Sidebar() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      router.push("/auth/login");
+      return;
+    }
+
+    const fetchUser = async () => {
+      try {
+        const response = await api.auth.me();
+        
+        if (!response.success) {
+          if (response.error?.includes("401") || response.error?.includes("Unauthorized")) {
+            router.push("/auth/login");
+            return;
+          }
+          console.error("Failed to fetch user data:", response.error);
+        } else {
+          setUser(response.data || null);
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      await api.auth.logout();
+    } catch (err) {
+      // Logout locally even if API call fails
+      console.warn("Logout API call failed:", err);
+    }
+    logout();
+  };
+
+  const getInitials = (email: string) => {
+    return email.charAt(0).toUpperCase();
+  };
+
+  const formatTier = (tier: string) => {
+    return tier.charAt(0).toUpperCase() + tier.slice(1) + " Plan";
+  };
 
   return (
     <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
@@ -77,21 +132,46 @@ export function Sidebar() {
 
       {/* User */}
       <div className="border-t border-gray-200 dark:border-gray-800 px-4 py-4">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
-            <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
-              U
-            </span>
+        {loading ? (
+          <div className="flex items-center gap-3 animate-pulse">
+            <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+            <div className="flex-1 min-w-0">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16 mb-1"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-12"></div>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-              User
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-              Free Plan
-            </p>
+        ) : user ? (
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+                <span className="text-sm font-medium text-primary-700 dark:text-primary-300">
+                  {getInitials(user.email)}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                  {user.email}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  {formatTier(user.subscription_tier)}
+                </p>
+              </div>
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              {user.shares_this_month} / {user.monthly_share_limit} shares this month
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full text-left text-xs text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+            >
+              Sign out
+            </button>
           </div>
-        </div>
+        ) : (
+          <div className="text-center text-gray-500 dark:text-gray-400 text-sm">
+            Failed to load user
+          </div>
+        )}
       </div>
     </aside>
   );

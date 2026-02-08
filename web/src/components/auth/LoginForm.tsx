@@ -23,9 +23,13 @@ export function LoginForm() {
       if (!res.success) {
         throw new Error(res.error || "Login failed");
       }
-      const data = res.data as { data: { token: string; user: { id: string; email: string } } };
-      setTokens(data.data.token, "");
-      window.location.href = "/dashboard";
+      
+      if (res.data?.token) {
+        setTokens(res.data.token);
+        window.location.href = "/dashboard";
+      } else {
+        throw new Error("No token received");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

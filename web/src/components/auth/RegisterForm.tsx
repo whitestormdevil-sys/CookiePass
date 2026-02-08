@@ -8,7 +8,6 @@ import { api } from "@/lib/api";
 import { setTokens } from "@/lib/auth";
 
 export function RegisterForm() {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,13 +31,17 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
-      const res = await api.auth.register(email, password, name);
+      const res = await api.auth.register(email, password);
       if (!res.success) {
         throw new Error(res.error || "Registration failed");
       }
-      const data = res.data as { data: { token: string; user: { id: string; email: string } } };
-      setTokens(data.data.token, "");
-      window.location.href = "/dashboard";
+      
+      if (res.data?.token) {
+        setTokens(res.data.token);
+        window.location.href = "/dashboard";
+      } else {
+        throw new Error("No token received");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -53,16 +56,6 @@ export function RegisterForm() {
           {error}
         </div>
       )}
-
-      <Input
-        label="Full Name"
-        type="text"
-        placeholder="John Doe"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        autoComplete="name"
-      />
 
       <Input
         label="Email"

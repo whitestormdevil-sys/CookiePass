@@ -1,14 +1,46 @@
+import { getToken } from "./auth";
 import type {
   ApiResponse,
-  AuthTokens,
-  DashboardStats,
+  ApiShareResponse,
+  ApiImportResponse,
   Share,
-  ShareDetails,
-  SharePreview,
+  ImportRecord,
   User,
 } from "@/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+// Mappers
+function mapShareFromApi(apiShare: ApiShareResponse): Share {
+  return {
+    id: apiShare.id,
+    userId: apiShare.user_id,
+    domain: apiShare.domain,
+    status: apiShare.is_revoked 
+      ? "revoked" 
+      : new Date(apiShare.expires_at) < new Date() 
+        ? "expired" 
+        : "active",
+    createdAt: apiShare.created_at,
+    expiresAt: apiShare.expires_at,
+    maxUses: apiShare.max_uses,
+    currentUses: apiShare.used_count,
+    isRevoked: apiShare.is_revoked,
+    revokedAt: apiShare.revoked_at,
+    cookies: apiShare.cookie_count,
+  };
+}
+
+function mapImportFromApi(apiImport: ApiImportResponse): ImportRecord {
+  return {
+    id: apiImport.id,
+    shareId: apiImport.share_id,
+    importedAt: apiImport.imported_at,
+    success: apiImport.success,
+    userAgent: apiImport.user_agent,
+    ipHash: apiImport.ip_hash,
+  };
+}
 
 async function request<T>(
   path: string,
@@ -23,7 +55,7 @@ async function request<T>(
 
   // Attach auth token if present (client-side only)
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("cookiepass_token");
+    const token = getToken();
     if (token) {
       (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
     }
@@ -52,71 +84,136 @@ async function request<T>(
 // ─── Auth ────────────────────────────────────────────────────
 export const api = {
   auth: {
-    login(email: string, password: string) {
-      return request<AuthTokens>("/auth/login", {
+    async login(email: string, password: string) {
+      return request<{ user: User; token: string }>("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
     },
-    register(email: string, password: string, name: string) {
-      return request<AuthTokens>("/auth/register", {
+    async register(email: string, password: string) {
+      return request<{ user: User; token: string }>("/auth/register", {
         method: "POST",
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, password }),
       });
     },
-    me() {
+    async logout() {
+      return request<{ message: string }>("/auth/logout", {
+        method: "POST",
+      });
+    },
+    async me() {
       return request<User>("/auth/me");
     },
   },
 
   // ─── Shares ──────────────────────────────────────────────────
   shares: {
-    list(params?: { status?: string; page?: number; limit?: number }) {
+    async list(params?: { status?: string; page?: number; limit?: number }) {
       const query = new URLSearchParams();
       if (params?.status) query.set("status", params.status);
-      if (params?.page) query.set("page", String(params.page));
+      if (params?.page) query.set("offset", String((params.page - 1) * (params.limit || 10)));
       if (params?.limit) query.set("limit", String(params.limit));
       const qs = query.toString();
-      return request<{ shares: Share[]; total: number }>(
-        `/shares${qs ? `?${qs}` : ""}`
-      );
+      
+      const response = await request<{
+        data: ApiShareResponse[];
+        total: number;
+        limit: number;
+        offset: number;
+      }>(`/shares${qs ? `?${qs}` : ""}`);
+      
+      if (response.success && response.data) {
+        return {
+          success: true,
+          data: {
+            shares: response.data.data.map(mapShareFromApi),
+            total: response.data.total,
+            limit: response.data.limit,
+            offset: response.data.offset,
+          },
+        };
+      }
+      
+      return {
+        success: false,
+        error: response.error || "Failed to fetch shares",
+      };
     },
-    get(id: string) {
-      return request<ShareDetails>(`/shares/${id}`);
+    
+    async get(id: string, requireAuth: boolean = true) {
+      const options: RequestInit = {};
+      if (!requireAuth) {
+        options.headers = { "Authorization": "" };
+      }
+      
+      const response = await request<ApiShareResponse>(`/shares/${id}`, options);
+      
+      if (response.success && response.data) {
+        return {
+          success: true,
+          data: mapShareFromApi(response.data),
+        };
+      }
+      
+      return {
+        success: false,
+        error: response.error || "Failed to fetch share",
+      };
     },
-    revoke(id: string) {
-      return request<Share>(`/shares/${id}/revoke`, { method: "POST" });
-    },
-    preview(id: string) {
-      return request<SharePreview>(`/shares/${id}/preview`);
-    },
-    import(id: string, password?: string) {
-      return request<{ cookies: unknown[] }>(`/shares/${id}/import`, {
-        method: "POST",
-        body: JSON.stringify({ password }),
+    
+    async revoke(id: string) {
+      const response = await request<ApiShareResponse>(`/shares/${id}`, {
+        method: "DELETE",
       });
+      
+      if (response.success && response.data) {
+        return {
+          success: true,
+          data: mapShareFromApi(response.data),
+        };
+      }
+      
+      return {
+        success: false,
+        error: response.error || "Failed to revoke share",
+      };
     },
-  },
-
-  // ─── Dashboard ─────────────────────────────────────────────────
-  dashboard: {
-    stats() {
-      return request<DashboardStats>("/dashboard/stats");
+    
+    async getImports(id: string) {
+      const response = await request<{
+        data: ApiImportResponse[];
+        total: number;
+      }>(`/shares/${id}/imports`);
+      
+      if (response.success && response.data) {
+        return {
+          success: true,
+          data: {
+            imports: response.data.data.map(mapImportFromApi),
+            total: response.data.total,
+          },
+        };
+      }
+      
+      return {
+        success: false,
+        error: response.error || "Failed to fetch imports",
+      };
+    },
+    
+    async import(id: string) {
+      return request<{ id: string; imported_at: string; success: boolean }>(`/shares/${id}/import`, {
+        method: "POST",
+      });
     },
   },
 
   // ─── User ──────────────────────────────────────────────────────
   user: {
-    update(data: Partial<User>) {
+    async update(data: Partial<{ email: string }>) {
       return request<User>("/user", {
         method: "PATCH",
         body: JSON.stringify(data),
-      });
-    },
-    updatePassword(currentPassword: string, newPassword: string) {
-      return request<{ success: boolean }>("/user/password", {
-        method: "POST",
-        body: JSON.stringify({ currentPassword, newPassword }),
       });
     },
   },

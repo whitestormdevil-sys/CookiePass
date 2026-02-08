@@ -1,21 +1,18 @@
 import type { User } from "@/types";
 
 const TOKEN_KEY = "cookiepass_token";
-const REFRESH_KEY = "cookiepass_refresh";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY);
 }
 
-export function setTokens(accessToken: string, refreshToken: string): void {
-  localStorage.setItem(TOKEN_KEY, accessToken);
-  localStorage.setItem(REFRESH_KEY, refreshToken);
+export function setTokens(token: string): void {
+  localStorage.setItem(TOKEN_KEY, token);
 }
 
 export function clearTokens(): void {
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(REFRESH_KEY);
 }
 
 export function isAuthenticated(): boolean {
@@ -54,8 +51,7 @@ export function getUserFromToken(): Partial<User> | null {
   return {
     id: payload.sub as string,
     email: payload.email as string,
-    name: payload.name as string,
-    tier: payload.tier as User["tier"],
+    subscription_tier: payload.subscription_tier as User["subscription_tier"],
   };
 }
 
