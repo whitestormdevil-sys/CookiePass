@@ -41,6 +41,21 @@ export async function getCookiesForDomain(domain: string): Promise<CookieData[]>
 }
 
 /**
+ * Build the correct URL for chrome.cookies.set() from a cookie's properties.
+ * The URL must match the cookie's domain and secure flag.
+ */
+function buildCookieUrl(cookie: CookieData, fallbackDomain: string): string {
+  const protocol = cookie.secure ? 'https' : 'http';
+  let domain = cookie.domain || fallbackDomain;
+  
+  // Remove leading dot (e.g. .github.com → github.com)
+  domain = domain.replace(/^\./, '');
+  
+  const path = cookie.path || '/';
+  return `${protocol}://${domain}${path}`;
+}
+
+/**
  * Set a single cookie in the browser.
  */
 export async function setCookie(cookie: CookieData, url: string): Promise<chrome.cookies.Cookie | null> {
@@ -61,41 +76,57 @@ export async function setCookie(cookie: CookieData, url: string): Promise<chrome
 
   // Set expiration (if not a session cookie)
   if (cookie.expirationDate) {
-    details.expirationDate = cookie.expirationDate;
+    // Ensure expiration is in the future; if it's expired, extend it by 1 year
+    const now = Date.now() / 1000;
+    if (cookie.expirationDate < now) {
+      details.expirationDate = now + 365 * 24 * 60 * 60;
+    } else {
+      details.expirationDate = cookie.expirationDate;
+    }
   }
 
   // SameSite=none requires secure
   if (details.sameSite === 'no_restriction') {
     details.secure = true;
+    // Also force https URL for SameSite=none cookies
+    if (details.url.startsWith('http://')) {
+      details.url = details.url.replace('http://', 'https://');
+    }
   }
 
   try {
-    return await chrome.cookies.set(details);
+    const result = await chrome.cookies.set(details);
+    if (!result) {
+      console.warn(`chrome.cookies.set returned null for ${cookie.name} (domain: ${cookie.domain}, url: ${url})`);
+    }
+    return result;
   } catch (error) {
-    console.error(`Failed to set cookie ${cookie.name}:`, error);
+    console.error(`Failed to set cookie ${cookie.name} (domain: ${cookie.domain}, url: ${url}):`, error);
     return null;
   }
 }
 
 /**
  * Set multiple cookies for a domain.
+ * Builds per-cookie URLs based on each cookie's actual domain and secure flag.
  */
 export async function setCookies(
   cookies: CookieData[],
   domain: string
 ): Promise<{ success: number; failed: number; errors: string[] }> {
-  const url = `https://${domain.replace(/^\./, '')}`;
   let success = 0;
   let failed = 0;
   const errors: string[] = [];
 
   for (const cookie of cookies) {
+    // Build URL from the cookie's own domain, not just the share's domain
+    const url = buildCookieUrl(cookie, domain);
     const result = await setCookie(cookie, url);
     if (result) {
       success++;
     } else {
       failed++;
-      errors.push(`Failed to set cookie: ${cookie.name}`);
+      errors.push(`Failed: ${cookie.name} (${cookie.domain || domain})`);
     }
   }
 

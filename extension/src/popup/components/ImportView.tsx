@@ -28,7 +28,7 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
-  const [importResult, setImportResult] = useState<{ success: number; failed: number } | null>(null);
+  const [importResult, setImportResult] = useState<{ success: number; failed: number; errors: string[] } | null>(null);
 
   const handleFetchShare = useCallback(async () => {
     setError(null);
@@ -180,7 +180,7 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
         cookieCount: decrypted.cookies.length,
       });
 
-      setImportResult(response.data || { success: decrypted.cookies.length, failed: 0 });
+      setImportResult(response.data || { success: decrypted.cookies.length, failed: 0, errors: [] });
       setStep('result');
 
       // Open the target site (if we haven't already for storage)
@@ -208,24 +208,32 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
 
   // --- Result ---
   if (step === 'result' && importResult) {
+    const allSuccess = importResult.failed === 0;
     return (
       <div className="p-4 animate-fade-in">
         <div className="flex flex-col items-center py-6">
-          <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-3">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-500">
+          <div className={`w-12 h-12 ${allSuccess ? 'bg-green-100 dark:bg-green-900/30' : 'bg-amber-100 dark:bg-amber-900/30'} rounded-full flex items-center justify-center mb-3`}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={allSuccess ? 'text-green-500' : 'text-amber-500'}>
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
           <h3 className="text-sm font-semibold text-surface-900 dark:text-white mb-1">
-            Import Successful!
+            {allSuccess ? 'Import Successful!' : 'Import Partially Successful'}
           </h3>
           <p className="text-xs text-surface-500 text-center">
-            {importResult.success} cookies imported for {preview?.domain}
+            {importResult.success}/{importResult.success + importResult.failed} cookies imported for {preview?.domain}
           </p>
           {importResult.failed > 0 && (
-            <p className="text-xs text-amber-500 mt-1">
-              {importResult.failed} cookies could not be set.
-            </p>
+            <div className="mt-2 w-full">
+              <p className="text-xs text-amber-500 text-center mb-1">
+                {importResult.failed} cookie{importResult.failed > 1 ? 's' : ''} could not be set:
+              </p>
+              <div className="max-h-24 overflow-y-auto bg-surface-50 dark:bg-surface-800 rounded-lg p-2">
+                {importResult.errors.map((err, i) => (
+                  <p key={i} className="text-[10px] text-surface-500 font-mono truncate">{err}</p>
+                ))}
+              </div>
+            </div>
           )}
           <p className="text-xs text-surface-400 mt-3">
             The target site has been opened in a new tab.
