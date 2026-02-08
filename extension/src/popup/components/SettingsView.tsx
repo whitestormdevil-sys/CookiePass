@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import type { User, AppSettings, ShareExpiration, ShareUseLimit } from '@/types';
-import { setSettings as saveSettings } from '@/lib/storage';
+import { setSettings as saveSettings, clearImportHistory } from '@/lib/storage';
 import { auth as authApi, subscription } from '@/lib/api';
 import { clearAuth } from '@/lib/auth';
 import { expirationToText, useLimitToText } from '@/utils/validators';
@@ -43,13 +43,44 @@ export default function SettingsView({
     onLogout();
   };
 
+  const handleClearImportHistory = async () => {
+    try {
+      await clearImportHistory();
+      // Show confirmation via notification
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
+        title: 'CookiePass',
+        message: 'Import history cleared successfully',
+      });
+    } catch (error) {
+      console.error('Failed to clear import history:', error);
+    }
+  };
+
   const handleUpgrade = async () => {
     try {
       const { url } = await subscription.getCheckoutUrl('pro');
       chrome.tabs.create({ url });
-    } catch {
-      // Fallback
-      chrome.tabs.create({ url: import.meta.env.VITE_APP_URL ? `${import.meta.env.VITE_APP_URL}/pricing` : 'http://localhost:3000/pricing' });
+    } catch (error) {
+      console.log('Checkout not available:', error);
+      // Show a toast or better message
+      const fallbackUrl = import.meta.env.VITE_APP_URL 
+        ? `${import.meta.env.VITE_APP_URL}/pricing` 
+        : 'http://localhost:3000/pricing';
+      
+      // For now, just open the pricing page with a temporary alert
+      chrome.tabs.create({ url: fallbackUrl });
+      
+      // TODO: Replace with proper toast system
+      setTimeout(() => {
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: chrome.runtime.getURL('icons/icon-128.png'),
+          title: 'CookiePass Pro',
+          message: 'Payment system coming soon! Check our pricing page for updates.',
+        });
+      }, 500);
     }
   };
 
@@ -180,6 +211,63 @@ export default function SettingsView({
         </div>
       </div>
 
+      {/* Data & Privacy */}
+      <div>
+        <h4 className="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wider mb-2">
+          Data & Privacy
+        </h4>
+        <div className="card space-y-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-surface-800 dark:text-surface-200">Import History</p>
+              <p className="text-[10px] text-surface-400">Clear your local import history</p>
+            </div>
+            <button
+              onClick={handleClearImportHistory}
+              className="btn-ghost btn-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* About */}
+      <div>
+        <h4 className="text-xs font-semibold text-surface-600 dark:text-surface-400 uppercase tracking-wider mb-2">
+          About
+        </h4>
+        <div className="card space-y-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-medium text-surface-800 dark:text-surface-200">Version</p>
+              <p className="text-[10px] text-surface-400">CookiePass v{chrome.runtime.getManifest().version}</p>
+            </div>
+          </div>
+          <div className="divider" />
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://github.com/cookiepass/extension' })}
+              className="btn-ghost btn-sm text-xs"
+            >
+              📦 GitHub
+            </button>
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://cookiepass.app/support' })}
+              className="btn-ghost btn-sm text-xs"
+            >
+              💬 Support
+            </button>
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://cookiepass.app/privacy' })}
+              className="btn-ghost btn-sm text-xs"
+            >
+              🔒 Privacy
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Logout */}
       {user && (
         <button
@@ -190,11 +278,6 @@ export default function SettingsView({
           {loggingOut ? 'Signing out...' : 'Sign Out'}
         </button>
       )}
-
-      {/* Version */}
-      <p className="text-[10px] text-surface-300 dark:text-surface-600 text-center">
-        CookiePass v{chrome.runtime.getManifest().version}
-      </p>
     </div>
   );
 }

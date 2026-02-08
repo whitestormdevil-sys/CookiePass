@@ -28,7 +28,7 @@ router.post(
         expires_at: share.expires_at,
         max_uses: share.max_uses,
         created_at: share.created_at,
-        share_url: `${process.env.SHARE_BASE_URL || '/s'}/${share.id}`,
+        share_url: `${process.env.APP_URL || 'http://localhost:3000'}/s/${share.id}`,
       },
     });
   })

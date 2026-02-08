@@ -285,8 +285,12 @@ export const shares = {
     };
   },
 
-  async recordImport(shareId: string): Promise<void> {
-    await request<unknown>('POST', `/shares/${shareId}/import`, { success: true });
+  async recordImport(shareId: string, success: boolean = true, errorMessage?: string): Promise<void> {
+    await request<unknown>('POST', `/shares/${shareId}/import`, { 
+      success,
+      user_agent: navigator.userAgent,
+      error_message: errorMessage 
+    });
   },
 };
 

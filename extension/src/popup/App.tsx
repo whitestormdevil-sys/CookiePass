@@ -23,6 +23,24 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
+  const applyTheme = useCallback((themeSetting: 'light' | 'dark' | 'system') => {
+    let isDark = false;
+
+    if (themeSetting === 'dark') {
+      isDark = true;
+    } else if (themeSetting === 'system') {
+      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    setTheme(isDark ? 'dark' : 'light');
+
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
   // Initialize
   useEffect(() => {
     async function init() {
@@ -33,6 +51,16 @@ export default function App() {
 
         // Apply theme
         applyTheme(s.theme);
+
+        // Set up system theme watcher
+        if (s.theme === 'system') {
+          const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+          const handleSystemThemeChange = () => applyTheme('system');
+          mediaQuery.addEventListener('change', handleSystemThemeChange);
+          
+          // Cleanup on unmount
+          return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+        }
 
         // Check auth
         const authed = await isAuthenticated();
@@ -64,25 +92,7 @@ export default function App() {
     }
 
     init();
-  }, []);
-
-  const applyTheme = useCallback((themeSetting: 'light' | 'dark' | 'system') => {
-    let isDark = false;
-
-    if (themeSetting === 'dark') {
-      isDark = true;
-    } else if (themeSetting === 'system') {
-      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-
-    setTheme(isDark ? 'dark' : 'light');
-
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
+  }, [applyTheme]);
 
   const handleSettingsChange = useCallback((newSettings: AppSettings) => {
     setSettings(newSettings);

@@ -169,9 +169,10 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
 
       // Record import
       try {
-        await sharesApi.recordImport(preview.shareId);
-      } catch {
-        // Non-critical
+        await sharesApi.recordImport(preview.shareId, true);
+      } catch (importErr) {
+        // Non-critical, but log for debugging
+        console.debug('Failed to record import:', importErr);
       }
 
       // Save to local import history
@@ -190,6 +191,14 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
         chrome.runtime.sendMessage({ type: 'OPEN_TAB', payload: { url: openTargetUrl } });
       }
     } catch (err) {
+      // Record failed import
+      try {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+        await sharesApi.recordImport(preview.shareId, false, errorMessage);
+      } catch (importErr) {
+        console.debug('Failed to record failed import:', importErr);
+      }
+
       setError(
         err instanceof Error
           ? err.message
@@ -337,7 +346,7 @@ export default function ImportView({ user, onNeedAuth }: ImportViewProps) {
             value={shareLink}
             onChange={(e) => setShareLink(e.target.value)}
             className="input"
-            placeholder="http://localhost:3000/s/xxxxx or short code"
+            placeholder="cookiepass.app/s/xxxxx or short code"
           />
         </div>
 

@@ -101,4 +101,8 @@ export async function addImportHistory(entry: ImportHistoryEntry): Promise<void>
   await set(KEYS.IMPORT_HISTORY, history);
 }
 
-export default { get, set, remove, clear, KEYS, getSettings, setSettings };
+export async function clearImportHistory(): Promise<void> {
+  await remove(KEYS.IMPORT_HISTORY);
+}
+
+export default { get, set, remove, clear, KEYS, getSettings, setSettings, clearImportHistory };
